@@ -1,4 +1,4 @@
-package com.tematihonov.fooddeliverytest.ui.theme
+package com.tematihonov.fooddeliverytest.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
