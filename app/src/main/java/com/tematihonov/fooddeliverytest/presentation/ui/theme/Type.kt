@@ -39,7 +39,7 @@ val Typography = Typography(
     ),
     bodySmall = TextStyle(
         fontFamily = FontFamily(Font(R.font.roboto)),
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 16.sp,
         lineHeight = 16.sp,
         letterSpacing = 0.5.sp
