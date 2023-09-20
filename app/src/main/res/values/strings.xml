@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">FoodDeliveryTest</string>
+    <string name="weight">Вес</string>
+    <string name="energy_value">Энерг. ценность</string>
+    <string name="squirrels">Белки</string>
+    <string name="fats">Жиры</string>
+    <string name="carbohydrates">Углеводы</string>
+    <string name="add_to_cart_for">В корзину за 720 ₽</string>
+    <string name="cart">Корзина</string>
+    <string name="order_for">Order for 2,160 ₽</string>
+    <string name="find_a_dish">Найти блюдо</string>
+    <string name="enter_name_of_dish">Введите название блюда, которое ищете</string>
+    <string name="select_dishes">Подобрать блюда</string>
+    <string name="ready">Готово</string>
+    <string name="nothing_was_found">Ничего не нашлось :(</string>
+    <string name="there_are_no_such_dishes">Таких блюд нет :( Попробуйте изменить фильтры</string>
+    <string name="empty_select_dishes">Пусто, выберите блюда в каталоге :)</string>
 </resources>

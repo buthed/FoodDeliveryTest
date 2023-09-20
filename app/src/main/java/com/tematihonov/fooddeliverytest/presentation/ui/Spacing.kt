@@ -11,6 +11,7 @@ data class Spacing(
     val extraSmall: Dp = 8.dp,
     val small: Dp = 10.dp,
     val small2: Dp = 12.dp,
+    val small3: Dp = 13.dp,
     val medium: Dp = 14.dp,
     val medium2: Dp = 16.dp,
     val large: Dp = 24.dp,
