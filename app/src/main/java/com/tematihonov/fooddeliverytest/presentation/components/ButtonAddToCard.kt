@@ -32,7 +32,6 @@ fun ButtonAddToCard(priceCurrent: Int, addToCard: () -> Unit) {
                 spotColor = Color(0x801F1F1F),
                 ambientColor = Color(0x801F1F1F)
             )
-
             .clip(RoundedCornerShape(8.dp))
             .background(Color.White)
             .padding(MaterialTheme.spacing.small2)

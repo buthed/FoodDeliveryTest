@@ -8,11 +8,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,42 +25,44 @@ import com.tematihonov.fooddeliverytest.presentation.ui.spacing
 import com.tematihonov.fooddeliverytest.presentation.ui.theme.Typography
 
 @Composable
-fun ProductItem() {
+fun ProductCatalogItem() {
     Box(
-        modifier = Modifier.width(170.dp),
+        modifier = Modifier.width(170.dp).clip(RoundedCornerShape(8.dp)),
         contentAlignment = Alignment.TopStart
     ) {
         //TODO add icon
         Column(
             modifier = Modifier
-                .padding(
-                    start = MaterialTheme.spacing.medium,
-                    end = MaterialTheme.spacing.medium,
-                    bottom = MaterialTheme.spacing.small2
-                )
                 .background(MaterialTheme.colors.backgroundCard),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.item), contentDescription = "",
                 Modifier.size(170.dp)
             )
-            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp),
+                modifier = Modifier.padding(
+                    start = MaterialTheme.spacing.medium,
+                    end = MaterialTheme.spacing.medium,
+                    top = MaterialTheme.spacing.medium
+                )
+            ) {
                 Text(
                     text = "Название блюда",
                     style = Typography.headlineMedium,
-                    color = Color.White
+                    color = Color.Black
                 ) //TODO add
                 Text(
                     text = "500 г",
                     style = Typography.headlineMedium,
-                    color = Color.White
+                    color = MaterialTheme.colors.textGray
                 ) //TODO add
             }
-            if (true) { //TODO add
-                ButtonAddToCard(480) { } //TODO add
-            } else {
-                ButtonAddToCardDiscount(480, 480) {} //TODO add
+            Box(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
+                if (true) { //TODO add
+                    ButtonAddToCard(480) { } //TODO add
+                } else {
+                    ButtonAddToCardDiscount(480, 480) {} //TODO add
+                }
             }
         }
     }
@@ -66,6 +70,6 @@ fun ProductItem() {
 
 @Preview
 @Composable
-fun ProductItemPreview() {
-    ProductItem()
+fun ProductCatalogItemPreview() {
+    ProductCatalogItem()
 }

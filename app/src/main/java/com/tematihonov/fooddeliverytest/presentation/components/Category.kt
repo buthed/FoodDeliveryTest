@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -23,11 +22,6 @@ import com.tematihonov.fooddeliverytest.presentation.ui.theme.Typography
 fun SelectedCategory(selectCategory: () -> Unit, category: String) {
     Box(
         modifier = Modifier
-            .shadow(
-                elevation = 16.dp,
-                spotColor = Color(0x801F1F1F),
-                ambientColor = Color(0x801F1F1F)
-            )
             .clip(RoundedCornerShape(8.dp))
             .background(MaterialTheme.colors.mainOrange)
             .padding(vertical = MaterialTheme.spacing.small2, horizontal = MaterialTheme.spacing.medium2)
@@ -42,11 +36,6 @@ fun SelectedCategory(selectCategory: () -> Unit, category: String) {
 fun Category(selectCategory: () -> Unit, category: String) {
     Box(
         modifier = Modifier
-            .shadow(
-                elevation = 16.dp,
-                spotColor = Color(0x801F1F1F),
-                ambientColor = Color(0x801F1F1F)
-            )
             .clip(RoundedCornerShape(8.dp))
             .padding(vertical = MaterialTheme.spacing.small2, horizontal = MaterialTheme.spacing.medium2)
             .clickable(onClick = selectCategory),

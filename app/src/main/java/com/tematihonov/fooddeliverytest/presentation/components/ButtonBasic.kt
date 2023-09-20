@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -48,27 +49,33 @@ fun ButtonBasic(buttonPurchase: () -> Unit, text: String) {
 }
 
 @Composable
-fun ButtonPurchaseWithIcon(buttonPurchase: () -> Unit, text: String) {
-    Box(
-        modifier = Modifier
-            .shadow(
-                elevation = 16.dp,
-                spotColor = Color(0x801F1F1F),
-                ambientColor = Color(0x801F1F1F)
-            )
-            .clip(RoundedCornerShape(8.dp))
-            .background(MaterialTheme.colors.mainOrange)
-            .padding(
-                vertical = MaterialTheme.spacing.medium,
-                horizontal = MaterialTheme.spacing.medium2
-            )
-            .clickable(onClick = buttonPurchase),
-        contentAlignment = Alignment.Center
-    ) {
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Image(painter = painterResource(id = R.drawable.cart), contentDescription = "",
-                colorFilter = ColorFilter.tint(Color.White))
-            Text(text = text, style = Typography.bodySmall, color = Color.White)
+fun ButtonPurchaseWithIcon(buttonPurchase: () -> Unit, totalPrice: Int) {
+    Box(modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium2)) {
+        Box(
+            modifier = Modifier
+                .shadow(
+                    elevation = 16.dp,
+                    spotColor = Color(0x801F1F1F),
+                    ambientColor = Color(0x801F1F1F)
+                )
+                .clip(RoundedCornerShape(8.dp))
+                .background(MaterialTheme.colors.mainOrange)
+                .padding(
+                    vertical = MaterialTheme.spacing.medium,
+                    horizontal = MaterialTheme.spacing.medium2
+                )
+                .fillMaxWidth()
+                .clickable(onClick = buttonPurchase),
+            contentAlignment = Alignment.Center
+        ) {
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+            ) {
+                Image(painter = painterResource(id = R.drawable.cart), contentDescription = "",
+                    colorFilter = ColorFilter.tint(Color.White))
+                Text(text = "$totalPrice ₽", style = Typography.bodySmall, color = Color.White)
+            }
         }
     }
 }
@@ -82,5 +89,5 @@ fun ButtonBasicPreview() {
 @Preview
 @Composable
 fun ButtonPurchaseWithIconPreview() {
-    ButtonPurchaseWithIcon(buttonPurchase = {}, text = "Label")
+    ButtonPurchaseWithIcon(buttonPurchase = {}, totalPrice = 225)
 }
