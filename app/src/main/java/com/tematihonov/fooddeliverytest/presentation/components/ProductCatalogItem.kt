@@ -17,15 +17,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.tematihonov.fooddeliverytest.R
+import com.tematihonov.fooddeliverytest.domain.models.responceProducts.ProductsListItem
 import com.tematihonov.fooddeliverytest.presentation.ui.colors
 import com.tematihonov.fooddeliverytest.presentation.ui.spacing
 import com.tematihonov.fooddeliverytest.presentation.ui.theme.Typography
 
 @Composable
-fun ProductCatalogItem() {
+fun ProductCatalogItem(productsListItem: ProductsListItem) {
     Box(
         modifier = Modifier.width(170.dp).clip(RoundedCornerShape(8.dp)),
         contentAlignment = Alignment.TopStart
@@ -47,29 +47,29 @@ fun ProductCatalogItem() {
                 )
             ) {
                 Text(
-                    text = "Название блюда",
+                    text = productsListItem.name,
                     style = Typography.headlineMedium,
                     color = Color.Black
                 ) //TODO add
                 Text(
-                    text = "500 г",
+                    text = "${productsListItem.measure} ${productsListItem.measure_unit}",
                     style = Typography.headlineMedium,
                     color = MaterialTheme.colors.textGray
                 ) //TODO add
             }
             Box(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
-                if (true) { //TODO add
-                    ButtonAddToCard(480) { } //TODO add
+                if (productsListItem.price_old == null || productsListItem.price_old == 0) { //TODO add
+                    ButtonAddToCard(productsListItem.price_current/100) { } //TODO add
                 } else {
-                    ButtonAddToCardDiscount(480, 480) {} //TODO add
+                    ButtonAddToCardDiscount(productsListItem.price_current/100, productsListItem.price_old/100) {} //TODO add
                 }
             }
         }
     }
 }
 
-@Preview
-@Composable
-fun ProductCatalogItemPreview() {
-    ProductCatalogItem()
-}
+//@Preview
+//@Composable
+//fun ProductCatalogItemPreview() {
+//    //ProductCatalogItem(ProductsListItem())
+//}

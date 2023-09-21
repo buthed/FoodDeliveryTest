@@ -13,12 +13,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -34,6 +33,7 @@ import com.tematihonov.fooddeliverytest.presentation.ui.spacing
 @Composable
 fun CatalogScreen() {
     val viewModel = hiltViewModel<CatalogViewModel>()
+
     Column(
         Modifier
             .background(Color.White)
@@ -42,7 +42,6 @@ fun CatalogScreen() {
     ) {
         CustomAppBar({},{})
 
-        val categoryList by viewModel.catalogCategories.collectAsState()
         LazyRow(
             modifier = Modifier
                 .fillMaxWidth()
@@ -51,9 +50,9 @@ fun CatalogScreen() {
                     vertical = MaterialTheme.spacing.extraSmall
                 )
         ) {
-            items(categoryList) {
-                if (it.name == "Суши") SelectedCategory(selectCategory = {}, category = it.name) //TODO add selector
-                else Category(selectCategory = {}, category = it.name)
+            items(viewModel.catalogCategories) {
+                if (it.id == viewModel.currentCategory) SelectedCategory(selectCategory = { viewModel.selectNewCategory(it.id) }, category = it.name) //TODO add selector
+                else Category(selectCategory = { viewModel.selectNewCategory(it.id) }, category = it.name)
             }
         }
         LazyVerticalGrid(columns = GridCells.Fixed(2), modifier = Modifier
@@ -63,8 +62,8 @@ fun CatalogScreen() {
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall),
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
         ) {
-            items(10) {
-                ProductCatalogItem() //TODO add class
+            items(viewModel.productsList) {
+                ProductCatalogItem(it) //TODO add class
             }
         }
         ButtonPurchaseWithIcon(buttonPurchase = {}, totalPrice = 225) //TODO add del fix?
