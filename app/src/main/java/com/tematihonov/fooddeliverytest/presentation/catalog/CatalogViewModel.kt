@@ -4,7 +4,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tematihonov.fooddeliverytest.data.repositoryImpl.NetworkRepositoryImpl
+import com.tematihonov.fooddeliverytest.domain.models.responceCategories.CategoriesListItem
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -13,11 +15,17 @@ class CatalogViewModel @Inject constructor(
     private val networkRepositoryImpl: NetworkRepositoryImpl
 ): ViewModel() {
 
+    var catalogCategories: MutableStateFlow<ArrayList<CategoriesListItem>> = MutableStateFlow(arrayListOf())
+    val isLoadingCategories = MutableStateFlow<Boolean>(true)
+
     fun checkCategories() {
         viewModelScope.launch {
+            isLoadingCategories.value = true
             val result = networkRepositoryImpl.getCategories()
             if (result.isSuccessful) {
-                result.body()?.forEach {
+                catalogCategories.value = networkRepositoryImpl.getCategories().body()!!
+                isLoadingCategories.value = false
+                catalogCategories.value.forEach {
                     Log.d("GGG", it.name)
                 }
             }

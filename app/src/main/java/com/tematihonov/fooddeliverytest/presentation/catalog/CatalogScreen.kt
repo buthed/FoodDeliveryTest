@@ -13,6 +13,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -34,14 +36,7 @@ fun CatalogScreen() {
     ) {
         CustomAppBar({},{})
 
-        val categoryList = listOf(
-            "Роллы",
-            "Суши",
-            "Наборы",
-            "Горячие блюда",
-            "Суши",
-            "Наборы"
-        ) //TODO change to retrofit
+        val categoryList by viewModel.catalogCategories.collectAsState()
         LazyRow(
             modifier = Modifier
                 .fillMaxWidth()
@@ -51,8 +46,8 @@ fun CatalogScreen() {
                 )
         ) {
             items(categoryList) {
-                if (it == "Роллы") SelectedCategory(selectCategory = {}, category = it)
-                else Category(selectCategory = {}, category = it)
+                if (it.name == "Суши") SelectedCategory(selectCategory = {}, category = it.name) //TODO add selector
+                else Category(selectCategory = {}, category = it.name)
             }
         }
         LazyVerticalGrid(columns = GridCells.Fixed(2), modifier = Modifier
