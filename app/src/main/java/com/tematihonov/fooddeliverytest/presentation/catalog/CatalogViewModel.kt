@@ -1,6 +1,9 @@
 package com.tematihonov.fooddeliverytest.presentation.catalog
 
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tematihonov.fooddeliverytest.data.repositoryImpl.NetworkRepositoryImpl
@@ -16,15 +19,15 @@ class CatalogViewModel @Inject constructor(
 ): ViewModel() {
 
     var catalogCategories: MutableStateFlow<ArrayList<CategoriesListItem>> = MutableStateFlow(arrayListOf())
-    val isLoadingCategories = MutableStateFlow<Boolean>(true)
+    var isLoadingCategories by mutableStateOf(true)
 
     fun checkCategories() {
         viewModelScope.launch {
-            isLoadingCategories.value = true
+            isLoadingCategories = true
             val result = networkRepositoryImpl.getCategories()
             if (result.isSuccessful) {
                 catalogCategories.value = networkRepositoryImpl.getCategories().body()!!
-                isLoadingCategories.value = false
+                isLoadingCategories = false
                 catalogCategories.value.forEach {
                     Log.d("GGG", it.name)
                 }

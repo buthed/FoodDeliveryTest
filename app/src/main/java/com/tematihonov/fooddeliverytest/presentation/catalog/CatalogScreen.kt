@@ -1,5 +1,9 @@
 package com.tematihonov.fooddeliverytest.presentation.catalog
 
+import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,8 +27,10 @@ import com.tematihonov.fooddeliverytest.presentation.components.Category
 import com.tematihonov.fooddeliverytest.presentation.components.CustomAppBar
 import com.tematihonov.fooddeliverytest.presentation.components.ProductCatalogItem
 import com.tematihonov.fooddeliverytest.presentation.components.SelectedCategory
+import com.tematihonov.fooddeliverytest.presentation.components.SplashScreen
 import com.tematihonov.fooddeliverytest.presentation.ui.spacing
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun CatalogScreen() {
     val viewModel = hiltViewModel<CatalogViewModel>()
@@ -32,7 +38,7 @@ fun CatalogScreen() {
         Modifier
             .background(Color.White)
             .fillMaxSize()
-            .padding(top = MaterialTheme.spacing.medium2)
+
     ) {
         CustomAppBar({},{})
 
@@ -62,6 +68,13 @@ fun CatalogScreen() {
             }
         }
         ButtonPurchaseWithIcon(buttonPurchase = {}, totalPrice = 225) //TODO add del fix?
+    }
+    
+    AnimatedVisibility(visible = viewModel.isLoadingCategories,
+        enter = fadeIn(),
+        exit = fadeOut()
+    ) {
+        SplashScreen()
     }
 
     LaunchedEffect(true) {

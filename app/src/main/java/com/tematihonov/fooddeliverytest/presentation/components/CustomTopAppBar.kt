@@ -31,7 +31,7 @@ fun CustomAppBar(
 ) {
     Box(
         modifier = Modifier
-            .height(80.dp)
+            .height(60.dp)
             .fillMaxWidth().padding(horizontal = MaterialTheme.spacing.extraSmall,),
         contentAlignment = Alignment.BottomCenter
     ) {
