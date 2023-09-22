@@ -2,6 +2,7 @@ package com.tematihonov.fooddeliverytest.presentation.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,7 +26,7 @@ import com.tematihonov.fooddeliverytest.presentation.ui.spacing
 import com.tematihonov.fooddeliverytest.presentation.ui.theme.Typography
 
 @Composable
-fun ProductCatalogItem(productsListItem: ProductsListItem) {
+fun ProductCatalogItem(productsListItem: ProductsListItem, selectProduct: () -> Unit) {
     Box(
         modifier = Modifier.width(170.dp).clip(RoundedCornerShape(8.dp)),
         contentAlignment = Alignment.TopStart
@@ -33,7 +34,8 @@ fun ProductCatalogItem(productsListItem: ProductsListItem) {
         //TODO add icon
         Column(
             modifier = Modifier
-                .background(MaterialTheme.colors.backgroundCard),
+                .background(MaterialTheme.colors.backgroundCard)
+                .clickable(onClick = selectProduct),
         ) {
             Image(
                 painter = painterResource(id = R.drawable.item), contentDescription = "",
@@ -47,7 +49,7 @@ fun ProductCatalogItem(productsListItem: ProductsListItem) {
                 )
             ) {
                 Text(
-                    text = productsListItem.name,
+                    text = productsListItem.name, //TODO change to 1 line?
                     style = Typography.headlineMedium,
                     color = Color.Black
                 ) //TODO add
@@ -59,17 +61,14 @@ fun ProductCatalogItem(productsListItem: ProductsListItem) {
             }
             Box(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
                 if (productsListItem.price_old == null || productsListItem.price_old == 0) { //TODO add
-                    ButtonAddToCard(productsListItem.price_current/100) { } //TODO add
+                    ButtonAddToCard(productsListItem.price_current/100) { }
                 } else {
                     ButtonAddToCardDiscount(productsListItem.price_current/100, productsListItem.price_old/100) {} //TODO add
                 }
             }
         }
+        if (productsListItem.tag_ids.isNotEmpty()) {
+            ProductTag(productsListItem.tag_ids[0])
+        }
     }
 }
-
-//@Preview
-//@Composable
-//fun ProductCatalogItemPreview() {
-//    //ProductCatalogItem(ProductsListItem())
-//}

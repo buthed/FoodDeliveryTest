@@ -49,7 +49,7 @@ fun ButtonBasic(buttonPurchase: () -> Unit, text: String) {
 }
 
 @Composable
-fun ButtonPurchaseWithIcon(buttonPurchase: () -> Unit, totalPrice: Int) {
+fun ButtonPurchaseWithIcon(buttonPurchase: () -> Unit, totalPrice: String) {
     Box(modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium2)) {
         Box(
             modifier = Modifier
@@ -74,7 +74,7 @@ fun ButtonPurchaseWithIcon(buttonPurchase: () -> Unit, totalPrice: Int) {
             ) {
                 Image(painter = painterResource(id = R.drawable.cart), contentDescription = "",
                     colorFilter = ColorFilter.tint(Color.White))
-                Text(text = "$totalPrice ₽", style = Typography.bodySmall, color = Color.White)
+                Text(text = totalPrice, style = Typography.bodySmall, color = Color.White)
             }
         }
     }
@@ -89,5 +89,5 @@ fun ButtonBasicPreview() {
 @Preview
 @Composable
 fun ButtonPurchaseWithIconPreview() {
-    ButtonPurchaseWithIcon(buttonPurchase = {}, totalPrice = 225)
+    ButtonPurchaseWithIcon(buttonPurchase = {}, totalPrice = "225 ₽")
 }

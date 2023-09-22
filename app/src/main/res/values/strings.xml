@@ -5,7 +5,7 @@
     <string name="squirrels">Белки</string>
     <string name="fats">Жиры</string>
     <string name="carbohydrates">Углеводы</string>
-    <string name="add_to_cart_for">В корзину за 720 ₽</string>
+    <string name="add_to_cart_for">В корзину за %1$d ₽</string>
     <string name="cart">Корзина</string>
     <string name="order_for">Order for 2,160 ₽</string>
     <string name="find_a_dish">Найти блюдо</string>

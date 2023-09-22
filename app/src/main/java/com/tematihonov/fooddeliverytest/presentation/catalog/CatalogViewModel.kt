@@ -21,6 +21,11 @@ class CatalogViewModel @Inject constructor(
     var catalogCategories by mutableStateOf(emptyList<CategoriesListItem>())
     var productsList by mutableStateOf(emptyList<ProductsListItem>())
     var currentCategory by mutableStateOf(676153)
+    var currentProduct by mutableStateOf<ProductsListItem?>(null)
+    var currentProductSelected by mutableStateOf(false)
+    var totalPrice by mutableStateOf(0)
+
+
     var isLoadingCategories by mutableStateOf(true)
     var isLoadingProducts by mutableStateOf(true)
 
@@ -57,7 +62,13 @@ class CatalogViewModel @Inject constructor(
     }
 
     fun selectNewCategory(newCategoryId: Int) {
+        isLoadingProducts = true
         currentCategory = newCategoryId
         checkProducts(newCategoryId)
+    }
+
+    fun selectNewProduct(productsListItem: ProductsListItem?) {
+        currentProductSelected =  (productsListItem != null)
+        currentProduct = productsListItem
     }
 }

@@ -1,37 +1,46 @@
 package com.tematihonov.fooddeliverytest.presentation.catalog
 
-import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tematihonov.fooddeliverytest.presentation.components.ButtonPurchaseWithIcon
 import com.tematihonov.fooddeliverytest.presentation.components.Category
 import com.tematihonov.fooddeliverytest.presentation.components.CustomAppBar
 import com.tematihonov.fooddeliverytest.presentation.components.ProductCatalogItem
+import com.tematihonov.fooddeliverytest.presentation.components.ProductItem
 import com.tematihonov.fooddeliverytest.presentation.components.SelectedCategory
 import com.tematihonov.fooddeliverytest.presentation.components.SplashScreen
+import com.tematihonov.fooddeliverytest.presentation.ui.colors
 import com.tematihonov.fooddeliverytest.presentation.ui.spacing
 
-@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun CatalogScreen() {
+
     val viewModel = hiltViewModel<CatalogViewModel>()
 
     Column(
@@ -55,25 +64,51 @@ fun CatalogScreen() {
                 else Category(selectCategory = { viewModel.selectNewCategory(it.id) }, category = it.name)
             }
         }
-        LazyVerticalGrid(columns = GridCells.Fixed(2), modifier = Modifier
-            .fillMaxSize()
-            .padding(MaterialTheme.spacing.medium2)
-            .weight(1f, fill = false),
-            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall),
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
-        ) {
-            items(viewModel.productsList) {
-                ProductCatalogItem(it) //TODO add class
+        if (viewModel.isLoadingProducts) {
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .height(500.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(100.dp),
+                    color = MaterialTheme.colors.mainOrange)
+            }
+
+        } else {
+            LazyVerticalGrid(columns = GridCells.Fixed(2), modifier = Modifier
+                .fillMaxSize()
+                .padding(MaterialTheme.spacing.medium2)
+                .weight(1f, fill = false),
+                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall),
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
+            ) {
+                items(viewModel.productsList) {
+                    ProductCatalogItem(productsListItem = it) {
+                        viewModel.selectNewProduct(it)
+                    }
+                }
             }
         }
-        ButtonPurchaseWithIcon(buttonPurchase = {}, totalPrice = 225) //TODO add del fix?
+        if (viewModel.totalPrice != 0) {
+            ButtonPurchaseWithIcon(buttonPurchase = {}, totalPrice = "${viewModel.totalPrice/100} ₽") //TODO add del fix?
+        }
     }
+
     
     AnimatedVisibility(visible = viewModel.isLoadingCategories,
         enter = fadeIn(),
         exit = fadeOut()
     ) {
         SplashScreen()
+    }
+
+    AnimatedVisibility(visible = viewModel.currentProductSelected,
+        enter = slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }),
+        exit = slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth })
+    ) {
+        ProductItem(viewModel.currentProduct) { viewModel.selectNewProduct(null) }
     }
 
     LaunchedEffect(true) {
