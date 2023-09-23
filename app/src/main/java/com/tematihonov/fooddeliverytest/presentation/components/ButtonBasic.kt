@@ -27,7 +27,7 @@ import com.tematihonov.fooddeliverytest.presentation.ui.spacing
 import com.tematihonov.fooddeliverytest.presentation.ui.theme.Typography
 
 @Composable
-fun ButtonBasic(buttonPurchase: () -> Unit, text: String) {
+fun ButtonBasic(buttonClick: () -> Unit, text: String) {
     Box(
         modifier = Modifier
             .shadow(
@@ -41,7 +41,8 @@ fun ButtonBasic(buttonPurchase: () -> Unit, text: String) {
                 vertical = MaterialTheme.spacing.medium,
                 horizontal = MaterialTheme.spacing.medium2
             )
-            .clickable(onClick = buttonPurchase),
+            .fillMaxWidth()
+            .clickable(onClick = buttonClick),
         contentAlignment = Alignment.Center
     ) {
         Text(text = text, style = Typography.bodySmall, color = Color.White)
@@ -83,7 +84,7 @@ fun ButtonPurchaseWithIcon(buttonPurchase: () -> Unit, totalPrice: String) {
 @Preview
 @Composable
 fun ButtonBasicPreview() {
-    ButtonBasic(buttonPurchase = {}, text = "Label")
+    ButtonBasic(buttonClick = {}, text = "Label")
 }
 
 @Preview

@@ -1,6 +1,7 @@
 package com.tematihonov.fooddeliverytest.presentation.ui.theme
 
 import androidx.compose.material3.Typography
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -50,5 +51,13 @@ val Typography = Typography(
         fontSize = 14.sp,
         lineHeight = 20.sp,
         letterSpacing = 0.5.sp
-    )
+    ),
+    headlineSmall = TextStyle(
+        fontFamily = FontFamily(Font(R.font.roboto)),
+        fontWeight = FontWeight.Normal,
+        color = Color.White,
+        fontSize = 11.sp,
+        lineHeight = 13.sp,
+        letterSpacing = 0.5.sp
+    ),
 )

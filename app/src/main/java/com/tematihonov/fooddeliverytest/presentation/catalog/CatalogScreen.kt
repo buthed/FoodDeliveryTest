@@ -19,89 +19,112 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.BottomSheetScaffold
+import androidx.compose.material.BottomSheetValue
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.rememberBottomSheetScaffoldState
+import androidx.compose.material.rememberBottomSheetState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.tematihonov.fooddeliverytest.presentation.components.BottomSheet
 import com.tematihonov.fooddeliverytest.presentation.components.ButtonPurchaseWithIcon
 import com.tematihonov.fooddeliverytest.presentation.components.Category
 import com.tematihonov.fooddeliverytest.presentation.components.CustomAppBar
 import com.tematihonov.fooddeliverytest.presentation.components.ProductCatalogItem
 import com.tematihonov.fooddeliverytest.presentation.components.ProductItem
 import com.tematihonov.fooddeliverytest.presentation.components.SelectedCategory
-import com.tematihonov.fooddeliverytest.presentation.components.SplashScreen
 import com.tematihonov.fooddeliverytest.presentation.ui.colors
 import com.tematihonov.fooddeliverytest.presentation.ui.spacing
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CatalogScreen() {
-
     val viewModel = hiltViewModel<CatalogViewModel>()
 
-    Column(
-        Modifier
-            .background(Color.White)
-            .fillMaxSize()
-
-    ) {
-        CustomAppBar({},{})
-
-        LazyRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    horizontal = MaterialTheme.spacing.medium2,
-                    vertical = MaterialTheme.spacing.extraSmall
-                )
-        ) {
-            items(viewModel.catalogCategories) {
-                if (it.id == viewModel.currentCategory) SelectedCategory(selectCategory = { viewModel.selectNewCategory(it.id) }, category = it.name) //TODO add selector
-                else Category(selectCategory = { viewModel.selectNewCategory(it.id) }, category = it.name)
+    val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
+    val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState)
+    val coroutine = rememberCoroutineScope()
+    BottomSheetScaffold(
+        scaffoldState = scaffoldState,
+        sheetContent = {
+            BottomSheet(tagsList = viewModel.tagsList) {
+                coroutine.launch {
+                    sheetState.collapse()
+                    viewModel.checkProducts(viewModel.currentCategory)
+                }
             }
+        },
+        sheetPeekHeight = 0.dp,
+        topBar = { CustomAppBar(
+            onFilterClicked = { coroutine.launch { sheetState.expand()} },
+            onSearchClicked = {  })
         }
-        if (viewModel.isLoadingProducts) {
-            Box(
-                Modifier
-                    .fillMaxWidth()
-                    .height(500.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(100.dp),
-                    color = MaterialTheme.colors.mainOrange)
-            }
-
-        } else {
-            LazyVerticalGrid(columns = GridCells.Fixed(2), modifier = Modifier
+    ) {
+        Column(
+            Modifier
+                .background(Color.White)
                 .fillMaxSize()
-                .padding(MaterialTheme.spacing.medium2)
-                .weight(1f, fill = false),
-                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall),
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
+
+        ) {
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        horizontal = MaterialTheme.spacing.medium2,
+                        vertical = MaterialTheme.spacing.extraSmall
+                    )
             ) {
-                items(viewModel.productsList) {
-                    ProductCatalogItem(productsListItem = it) {
-                        viewModel.selectNewProduct(it)
+                items(viewModel.catalogCategories) {
+                    if (it.id == viewModel.currentCategory) SelectedCategory(selectCategory = { viewModel.selectNewCategory(it.id) }, category = it.name) //TODO add selector
+                    else Category(selectCategory = { viewModel.selectNewCategory(it.id) }, category = it.name)
+                }
+            }
+            if (viewModel.isLoadingProducts) {
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(500.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(100.dp),
+                        color = MaterialTheme.colors.mainOrange)
+                }
+
+            } else {
+                LazyVerticalGrid(columns = GridCells.Fixed(2), modifier = Modifier
+                    .fillMaxSize()
+                    .padding(MaterialTheme.spacing.medium2)
+                    .weight(1f, fill = false),
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall),
+                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
+                ) {
+                    items(viewModel.productsList) {
+                        ProductCatalogItem(productsListItem = it) {
+                            viewModel.selectNewProduct(it)
+                        }
                     }
                 }
             }
-        }
-        if (viewModel.totalPrice != 0) {
-            ButtonPurchaseWithIcon(buttonPurchase = {}, totalPrice = "${viewModel.totalPrice/100} ₽") //TODO add del fix?
+            if (viewModel.totalPrice != 0) {
+                ButtonPurchaseWithIcon(buttonPurchase = {}, totalPrice = "${viewModel.totalPrice/100} ₽") //TODO add del fix?
+            }
         }
     }
-
     
     AnimatedVisibility(visible = viewModel.isLoadingCategories,
         enter = fadeIn(),
         exit = fadeOut()
     ) {
-        SplashScreen()
+        //SplashScreen()
     }
 
     AnimatedVisibility(visible = viewModel.currentProductSelected,
@@ -109,9 +132,5 @@ fun CatalogScreen() {
         exit = slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth })
     ) {
         ProductItem(viewModel.currentProduct) { viewModel.selectNewProduct(null) }
-    }
-
-    LaunchedEffect(true) {
-        viewModel.checkCategories()
     }
 }

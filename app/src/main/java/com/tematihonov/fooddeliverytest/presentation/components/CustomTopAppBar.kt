@@ -1,7 +1,6 @@
 package com.tematihonov.fooddeliverytest.presentation.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.tematihonov.fooddeliverytest.R
 import com.tematihonov.fooddeliverytest.presentation.ui.spacing
@@ -27,7 +25,7 @@ import com.tematihonov.fooddeliverytest.presentation.ui.spacing
 @Composable
 fun CustomAppBar(
     onFilterClicked: () -> Unit,
-    onSearchClicked: () -> Unit
+    onSearchClicked: () -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -44,17 +42,18 @@ fun CustomAppBar(
                 )
             },
             navigationIcon = {
-                Image(
-                    painter = painterResource(id = R.drawable.filter), contentDescription = "",
-                    Modifier
-                        .size(44.dp).padding(MaterialTheme.spacing.extraSmall).clickable(onClick = onFilterClicked))
+                ButtonFilter(onFilterClicked = onFilterClicked)
+//                Image(
+//                    painter = painterResource(id = R.drawable.filter), contentDescription = "",
+//                    Modifier
+//                        .size(44.dp).padding(MaterialTheme.spacing.extraSmall).clickable(onClick = ))
             },
             actions =  {
                 IconButton(onClick = onSearchClicked) {
                     Image(
                         painter = painterResource(id = R.drawable.search), contentDescription = "",
                         Modifier
-                            .size(44.dp).padding(MaterialTheme.spacing.extraSmall))
+                            .size(24.dp))
                 }
             }
         )
@@ -65,11 +64,11 @@ fun CustomAppBar(
     }
 }
 
-@Preview
-@Composable
-fun CustomAppBarPreview() {
-    CustomAppBar(
-        onFilterClicked = {},
-        onSearchClicked = {},
-    )
-}
+//@Preview
+//@Composable
+//fun CustomAppBarPreview() {
+//    CustomAppBar(
+//        onFilterClicked = {},
+//        onSearchClicked = {},
+//    )
+//}
