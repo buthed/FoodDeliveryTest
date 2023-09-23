@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -45,7 +46,7 @@ fun CustomAppBar(
         modifier = Modifier
             .height(60.dp)
             .fillMaxWidth()
-            .padding(horizontal = MaterialTheme.spacing.extraSmall,),
+            .padding(horizontal = MaterialTheme.spacing.extraSmall),
         contentAlignment = Alignment.BottomCenter
     ) {
         when(searchAppBarState) {
@@ -71,7 +72,8 @@ fun CustomAppBar(
                                 Modifier
                                     .size(24.dp))
                         }
-                    }
+                    },
+                    modifier = Modifier.shadow(elevation = 16.dp, spotColor = Color(0x1A000000), ambientColor = Color(0x1A000000))
                 )
             }
             SearchAppBarState.OPENED -> {
@@ -107,7 +109,9 @@ fun CustomAppBar(
                     actions =  {
                         IconButton(onClick = {  }) {
                             Icon(painter = painterResource(id = R.drawable.cancel), contentDescription = "",
-                                Modifier.size(24.dp).clickable { searchInput = "" })
+                                Modifier
+                                    .size(24.dp)
+                                    .clickable { searchInput = "" })
                         }
                     }
                 )
@@ -116,34 +120,21 @@ fun CustomAppBar(
     }
 }
 
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Preview
-//@Composable
-//fun CustomAppBarPreview() {
-//    Box(contentAlignment = Alignment.Center) {
-//        TopAppBar(
-//            title = {
-//                var searchInput = ""
-//                TextField(value = searchInput, onValueChange = { searchInput = it },
-//                    colors = TextFieldDefaults.textFieldColors(
-//                        backgroundColor = Color.Transparent,
-//                        disabledIndicatorColor = Color.Transparent,
-//                        errorIndicatorColor = Color.Transparent,
-//                        focusedIndicatorColor = Color.Transparent,
-//                        unfocusedIndicatorColor = Color.Transparent,
-//                    ),
-//                )
-//            },
-//            navigationIcon = {
-//                Icon(painter = painterResource(id = R.drawable.arrowleft), contentDescription = "",
-//                    Modifier.size(24.dp), tint = MaterialTheme.colors.mainOrange)
-//            },
-//            actions =  {
-//                IconButton(onClick = {  }) {
-//                    Icon(painter = painterResource(id = R.drawable.cancel), contentDescription = "",
-//                            Modifier.size(24.dp))
-//                }
-//            }
-//        )
-//    }
-//}
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BasketTopBar() {
+    TopAppBar(
+        title = {
+            Text(text = stringResource(id = R.string.basket), style = Typography.titleSmall,
+                modifier = Modifier.padding(start = MaterialTheme.spacing.extraLarge))
+        },
+        navigationIcon = {
+            Icon(painter = painterResource(id = R.drawable.arrowleft), contentDescription = "",
+                Modifier
+                    .size(24.dp)
+                    .padding(1.dp)
+                    .clickable {}, //TODO add
+                tint = MaterialTheme.colors.mainOrange)
+        },
+    )
+}

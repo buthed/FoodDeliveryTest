@@ -45,7 +45,7 @@ fun ItemCardCounter(
                     ambientColor = Color(0x801F1F1F)
                 )
                 .clip(RoundedCornerShape(8.dp))
-                .background(Color.White)
+                .background(MaterialTheme.colors.backgroundCard)
                 .padding(MaterialTheme.spacing.extraSmall)
                 .clickable(onClick = minusCount),
             contentAlignment = Alignment.Center
@@ -67,7 +67,7 @@ fun ItemCardCounter(
                     ambientColor = Color(0x801F1F1F)
                 )
                 .clip(RoundedCornerShape(8.dp))
-                .background(Color.White)
+                .background(MaterialTheme.colors.backgroundCard)
                 .padding(MaterialTheme.spacing.extraSmall)
                 .clickable(onClick = plusCount),
             contentAlignment = Alignment.Center
@@ -89,7 +89,7 @@ fun CartRowCounter(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Box(
             modifier = Modifier

@@ -24,6 +24,13 @@ val Typography = Typography(
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     ),
+    titleSmall = TextStyle(
+        fontFamily = FontFamily(Font(R.font.roboto)),
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 18.sp,
+        lineHeight = 22.5.sp,
+        letterSpacing = 0.5.sp
+    ),
     bodyLarge = TextStyle(
         fontFamily = FontFamily(Font(R.font.roboto)),
         fontWeight = FontWeight.Normal,

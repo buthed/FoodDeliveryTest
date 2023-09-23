@@ -33,6 +33,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import com.tematihonov.fooddeliverytest.presentation.basket.BasketViewModel
 import com.tematihonov.fooddeliverytest.presentation.components.BottomSheet
 import com.tematihonov.fooddeliverytest.presentation.components.ButtonPurchaseWithIcon
 import com.tematihonov.fooddeliverytest.presentation.components.Category
@@ -46,8 +48,9 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun CatalogScreen() {
+fun CatalogScreen(foodDeliveryNavigate: NavHostController) {
     val viewModel = hiltViewModel<CatalogViewModel>()
+    val basketViewModel = hiltViewModel<BasketViewModel>()
 
     val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState)
@@ -84,8 +87,15 @@ fun CatalogScreen() {
                     )
             ) {
                 items(viewModel.catalogCategories) {
-                    if (it.id == viewModel.currentCategory) SelectedCategory(selectCategory = { viewModel.selectNewCategory(it.id) }, category = it.name) //TODO add selector
-                    else Category(selectCategory = { viewModel.selectNewCategory(it.id) }, category = it.name)
+                    if (it.id == viewModel.currentCategory) SelectedCategory(selectCategory = {
+                        viewModel.selectNewCategory(
+                            it.id
+                        )
+                    }, category = it.name) //TODO add selector
+                    else Category(
+                        selectCategory = { viewModel.selectNewCategory(it.id) },
+                        category = it.name
+                    )
                 }
             }
             if (viewModel.isLoadingProducts) {
@@ -97,26 +107,30 @@ fun CatalogScreen() {
                 ) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(100.dp),
-                        color = MaterialTheme.colors.mainOrange)
+                        color = MaterialTheme.colors.mainOrange
+                    )
                 }
-
             } else {
-                LazyVerticalGrid(columns = GridCells.Fixed(2), modifier = Modifier
-                    .fillMaxSize()
-                    .padding(MaterialTheme.spacing.medium2)
-                    .weight(1f, fill = false),
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2), modifier = Modifier
+                        .fillMaxSize()
+                        .padding(MaterialTheme.spacing.medium2)
+                        .weight(1f, fill = false),
                     horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall),
                     verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
                 ) {
                     items(viewModel.productsList) {
-                        ProductCatalogItem(productsListItem = it) {
-                            viewModel.selectNewProduct(it)
-                        }
+                        ProductCatalogItem(productsListItem = it) { viewModel.selectNewProduct(it) }
                     }
                 }
             }
-            if (viewModel.totalPrice != 0) {
-                ButtonPurchaseWithIcon(buttonPurchase = {}, totalPrice = "${viewModel.totalPrice/100} ₽") //TODO add del fix?
+            if (basketViewModel.totalPrice != 0) {
+                Box(Modifier.padding(bottom = MaterialTheme.spacing.small2)) {
+                    ButtonPurchaseWithIcon(
+                        buttonPurchase = { foodDeliveryNavigate.navigate("BasketScreen") },
+                        totalPrice = "${basketViewModel.totalPrice / 100} ₽"
+                    ) //TODO add del fix?
+                }
             }
         }
     }
