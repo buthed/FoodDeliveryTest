@@ -10,6 +10,7 @@ import com.tematihonov.fooddeliverytest.domain.models.responceProducts.ProductsL
 import com.tematihonov.fooddeliverytest.domain.models.responseCategories.CategoriesListItem
 import com.tematihonov.fooddeliverytest.domain.models.responseTags.TagsListItem
 import com.tematihonov.fooddeliverytest.domain.usecase.NetworkUseCase
+import com.tematihonov.fooddeliverytest.utils.SearchAppBarState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -31,6 +32,7 @@ class CatalogViewModel @Inject constructor(
     var tagsSelected by mutableStateOf(0)
     var totalPrice by mutableStateOf(0)
 
+    var searchAppBarState by mutableStateOf(SearchAppBarState.CLOSED)
 
     var isLoadingCategories by mutableStateOf(true)
     var isLoadingProducts by mutableStateOf(true)

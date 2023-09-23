@@ -65,7 +65,8 @@ fun CatalogScreen() {
         sheetPeekHeight = 0.dp,
         topBar = { CustomAppBar(
             onFilterClicked = { coroutine.launch { sheetState.expand()} },
-            onSearchClicked = {  })
+            catalogViewModel = viewModel,
+            searchAppBarState = viewModel.searchAppBarState)
         }
     ) {
         Column(
