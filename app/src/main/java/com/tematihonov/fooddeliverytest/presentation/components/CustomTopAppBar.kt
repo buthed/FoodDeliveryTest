@@ -15,6 +15,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -81,7 +82,10 @@ fun CustomAppBar(
 
                 TopAppBar(
                     title = {
-                        TextField(value = searchInput, onValueChange = { searchInput = it },
+                        TextField(value = searchInput,
+                            onValueChange = {
+                                searchInput = it
+                                catalogViewModel.searchProducts(searchInput) },
                             textStyle = Typography.bodyMedium,
                             placeholder = { Text(stringResource(id = R.string.find_a_dish), style = Typography.bodyMedium) },
                             singleLine = true, //TODO fix length?
@@ -111,7 +115,10 @@ fun CustomAppBar(
                             Icon(painter = painterResource(id = R.drawable.cancel), contentDescription = "",
                                 Modifier
                                     .size(24.dp)
-                                    .clickable { searchInput = "" })
+                                    .clickable {
+                                        searchInput = ""
+                                        catalogViewModel.searchProducts(searchInput)
+                                    })
                         }
                     }
                 )
@@ -136,6 +143,7 @@ fun BasketTopBar(backClick: () -> Unit) {
                     .clickable(onClick = backClick),
                 tint = MaterialTheme.colors.mainOrange)
         },
-        modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium2)
+        modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium2),
+        colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.White)
     )
 }

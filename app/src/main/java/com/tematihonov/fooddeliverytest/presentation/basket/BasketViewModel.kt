@@ -31,14 +31,12 @@ class BasketViewModel @Inject constructor(
     }
 
     fun detectProductCount(product: ProductsListItem): Int {
-
         return productsInBasketCount[productsInBasket.indexOf(product)]
     }
 
     fun detectProductOwn(product: ProductsListItem): Boolean {
         return productsInBasket.contains(product)
     }
-
 
     fun plusMinusCount(product: ProductsListItem, plusCount: Boolean) {
         when (plusCount) {

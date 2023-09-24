@@ -92,6 +92,26 @@ class CatalogViewModel @Inject constructor(
         }
     }
 
+    fun searchProducts(search: String) {
+        viewModelScope.launch {
+            if (search.isEmpty()) {
+                productsList = ArrayList<ProductsListItem>()
+            } else {
+                isLoadingProducts = true
+                val result = networkUseCase.getProductsUseCase.invoke()
+                if (result.isSuccessful) {
+                    val tempList = result.body()!!
+                    val newArr = ArrayList<ProductsListItem>()
+                    tempList.forEach {
+                        if (it.name.lowercase().contains(search.lowercase())) newArr.add(it)
+                    }
+                    productsList = newArr
+                }
+                isLoadingProducts = false
+            }
+        }
+    }
+
     fun checkTags() {
         viewModelScope.launch {
             val result = networkUseCase.getTagsUseCase.invoke()

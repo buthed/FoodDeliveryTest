@@ -44,6 +44,7 @@ import com.tematihonov.fooddeliverytest.presentation.components.ProductItem
 import com.tematihonov.fooddeliverytest.presentation.components.SelectedCategory
 import com.tematihonov.fooddeliverytest.presentation.ui.colors
 import com.tematihonov.fooddeliverytest.presentation.ui.spacing
+import com.tematihonov.fooddeliverytest.utils.SearchAppBarState
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -55,6 +56,7 @@ fun CatalogScreen() {
     val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState)
     val coroutine = rememberCoroutineScope()
+
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         sheetContent = {
@@ -70,69 +72,100 @@ fun CatalogScreen() {
             onFilterClicked = { coroutine.launch { sheetState.expand()} },
             catalogViewModel = viewModel,
             searchAppBarState = viewModel.searchAppBarState)
-        }
+        },
     ) {
-        Column(
-            Modifier
-                .background(Color.White)
-                .fillMaxSize()
-
-        ) {
-            LazyRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        horizontal = MaterialTheme.spacing.medium2,
-                        vertical = MaterialTheme.spacing.extraSmall
-                    )
-            ) {
-                items(viewModel.catalogCategories) {
-                    if (it.id == viewModel.currentCategory) SelectedCategory(selectCategory = {
-                        viewModel.selectNewCategory(
-                            it.id
-                        )
-                    }, category = it.name) //TODO add selector
-                    else Category(
-                        selectCategory = { viewModel.selectNewCategory(it.id) },
-                        category = it.name
-                    )
-                }
-            }
-            if (viewModel.isLoadingProducts) {
-                Box(
+        when(viewModel.searchAppBarState) {
+            SearchAppBarState.CLOSED -> {
+                Column(
                     Modifier
-                        .fillMaxWidth()
-                        .height(500.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(100.dp),
-                        color = MaterialTheme.colors.mainOrange
-                    )
-                }
-            } else {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2), modifier = Modifier
+                        .background(Color.White)
                         .fillMaxSize()
-                        .padding(MaterialTheme.spacing.medium2)
-                        .weight(1f, fill = false),
-                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall),
-                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
                 ) {
-                    items(viewModel.productsList) {
-                        ProductCatalogItem(productsListItem = it) { viewModel.selectNewProduct(it) }
+                    LazyRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                horizontal = MaterialTheme.spacing.medium2,
+                                vertical = MaterialTheme.spacing.extraSmall
+                            )
+                    ) {
+                        items(viewModel.catalogCategories) {
+                            if (it.id == viewModel.currentCategory) SelectedCategory(selectCategory = {
+                                viewModel.selectNewCategory(
+                                    it.id
+                                )
+                            }, category = it.name) //TODO add selector
+                            else Category(
+                                selectCategory = { viewModel.selectNewCategory(it.id) },
+                                category = it.name
+                            )
+                        }
+                    }
+                    if (viewModel.isLoadingProducts) {
+                        Box(
+                            Modifier
+                                .fillMaxWidth()
+                                .height(500.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(100.dp),
+                                color = MaterialTheme.colors.mainOrange
+                            )
+                        }
+                    } else {
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(2), modifier = Modifier
+                                .fillMaxSize()
+                                .padding(MaterialTheme.spacing.medium2)
+                                .weight(1f, fill = false),
+                            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall),
+                            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
+                        ) {
+                            items(viewModel.productsList) {
+                                ProductCatalogItem(productsListItem = it) { viewModel.selectNewProduct(it) }
+                            }
+                        }
+                    }
+                    if (basketViewModel.totalPrice != 0) {
+                        Box(Modifier.padding(bottom = MaterialTheme.spacing.small2)) {
+                            ButtonPurchaseWithIcon(
+                                buttonPurchase = { viewModel.basketScreenVisibility = true },
+                                totalPrice = "${basketViewModel.totalPrice / 100} ₽"
+                            ) //TODO add del fix?
+                        }
                     }
                 }
             }
-            if (basketViewModel.totalPrice != 0) {
-                Box(Modifier.padding(bottom = MaterialTheme.spacing.small2)) {
-                    ButtonPurchaseWithIcon(
-                        buttonPurchase = { viewModel.basketScreenVisibility = true },
-                        totalPrice = "${basketViewModel.totalPrice / 100} ₽"
-                    ) //TODO add del fix?
+            SearchAppBarState.OPENED -> {
+                if (viewModel.isLoadingProducts) {
+                    Box(
+                        Modifier
+                            .fillMaxWidth()
+                            .height(500.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(100.dp),
+                            color = MaterialTheme.colors.mainOrange
+                        )
+                    }
+                } else {
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2), modifier = Modifier
+                            .fillMaxSize()
+                            .padding(MaterialTheme.spacing.medium2),
+                        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall),
+                        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
+                    ) {
+                        items(viewModel.productsList) {
+                            ProductCatalogItem(productsListItem = it) { viewModel.selectNewProduct(it) }
+                        }
+                    }
                 }
             }
         }
+
     }
     
     AnimatedVisibility(visible = viewModel.isLoadingCategories,
