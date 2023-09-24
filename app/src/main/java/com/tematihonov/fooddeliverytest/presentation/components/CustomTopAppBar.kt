@@ -122,7 +122,7 @@ fun CustomAppBar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BasketTopBar() {
+fun BasketTopBar(backClick: () -> Unit) {
     TopAppBar(
         title = {
             Text(text = stringResource(id = R.string.basket), style = Typography.titleSmall,
@@ -133,8 +133,9 @@ fun BasketTopBar() {
                 Modifier
                     .size(24.dp)
                     .padding(1.dp)
-                    .clickable {}, //TODO add
+                    .clickable(onClick = backClick),
                 tint = MaterialTheme.colors.mainOrange)
         },
+        modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium2)
     )
 }

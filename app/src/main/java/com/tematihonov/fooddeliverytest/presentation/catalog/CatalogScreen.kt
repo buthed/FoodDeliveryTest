@@ -33,7 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
+import com.tematihonov.fooddeliverytest.presentation.basket.BasketScreen
 import com.tematihonov.fooddeliverytest.presentation.basket.BasketViewModel
 import com.tematihonov.fooddeliverytest.presentation.components.BottomSheet
 import com.tematihonov.fooddeliverytest.presentation.components.ButtonPurchaseWithIcon
@@ -48,7 +48,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun CatalogScreen(foodDeliveryNavigate: NavHostController) {
+fun CatalogScreen() {
     val viewModel = hiltViewModel<CatalogViewModel>()
     val basketViewModel = hiltViewModel<BasketViewModel>()
 
@@ -127,7 +127,7 @@ fun CatalogScreen(foodDeliveryNavigate: NavHostController) {
             if (basketViewModel.totalPrice != 0) {
                 Box(Modifier.padding(bottom = MaterialTheme.spacing.small2)) {
                     ButtonPurchaseWithIcon(
-                        buttonPurchase = { foodDeliveryNavigate.navigate("BasketScreen") },
+                        buttonPurchase = { viewModel.basketScreenVisibility = true },
                         totalPrice = "${basketViewModel.totalPrice / 100} ₽"
                     ) //TODO add del fix?
                 }
@@ -146,6 +146,15 @@ fun CatalogScreen(foodDeliveryNavigate: NavHostController) {
         enter = slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }),
         exit = slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth })
     ) {
-        ProductItem(viewModel.currentProduct) { viewModel.selectNewProduct(null) }
+        ProductItem(currentProduct = viewModel.currentProduct,
+            backClick = { viewModel.selectNewProduct(null) },
+            purchaseClick = {
+                basketViewModel.addNewProduct(viewModel.currentProduct!!)
+                viewModel.selectNewProduct(null)
+            })
+    }
+    
+    AnimatedVisibility(viewModel.basketScreenVisibility) {
+        BasketScreen(viewModel)
     }
 }

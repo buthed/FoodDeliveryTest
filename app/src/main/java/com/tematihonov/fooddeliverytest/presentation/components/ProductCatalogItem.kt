@@ -13,22 +13,34 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.tematihonov.fooddeliverytest.R
 import com.tematihonov.fooddeliverytest.domain.models.responceProducts.ProductsListItem
+import com.tematihonov.fooddeliverytest.presentation.basket.BasketViewModel
 import com.tematihonov.fooddeliverytest.presentation.ui.colors
 import com.tematihonov.fooddeliverytest.presentation.ui.spacing
 import com.tematihonov.fooddeliverytest.presentation.ui.theme.Typography
 
 @Composable
-fun ProductCatalogItem(productsListItem: ProductsListItem, selectProduct: () -> Unit) {
+fun ProductCatalogItem(
+    productsListItem: ProductsListItem,
+    selectProduct: () -> Unit
+) {
+    val basketViewModel = hiltViewModel<BasketViewModel>()
     Box(
-        modifier = Modifier.width(170.dp).clip(RoundedCornerShape(8.dp)),
+        modifier = Modifier
+            .width(170.dp)
+            .clip(RoundedCornerShape(8.dp)),
         contentAlignment = Alignment.TopStart
     ) {
         //TODO add icon
@@ -60,10 +72,31 @@ fun ProductCatalogItem(productsListItem: ProductsListItem, selectProduct: () -> 
                 ) //TODO add
             }
             Box(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
-                if (productsListItem.price_old == null || productsListItem.price_old == 0) { //TODO add
-                    ButtonAddToCard(productsListItem.price_current/100) { }
-                } else {
-                    ButtonAddToCardDiscount(productsListItem.price_current/100, productsListItem.price_old/100) {} //TODO add
+                var basketListContainsProduct by remember { mutableStateOf(basketViewModel.detectProductOwn(productsListItem)) }
+                when (basketListContainsProduct) {
+                    true -> {
+                        var currentCount by remember { mutableStateOf(basketViewModel.detectProductCount(productsListItem)) }
+                        CartRowCounter(
+                            currentCount = currentCount,
+                            minusCount = { basketViewModel.plusMinusCount(productsListItem, false)
+                                basketListContainsProduct = basketViewModel.detectProductOwn(productsListItem)
+                                currentCount = basketViewModel.detectProductCount(productsListItem)},
+                            plusCount = { basketViewModel.plusMinusCount(productsListItem, true)
+                                basketListContainsProduct = basketViewModel.detectProductOwn(productsListItem)
+                                currentCount = basketViewModel.detectProductCount(productsListItem)},
+                        )
+                    }
+                    false -> {
+                        if (productsListItem.price_old == 0) { //TODO add
+                            ButtonAddToCard(productsListItem.price_current/100) {
+                                basketViewModel.addNewProduct(productsListItem)
+                                basketListContainsProduct = basketViewModel.detectProductOwn(productsListItem)}
+                        } else {
+                            ButtonAddToCardDiscount(productsListItem.price_current/100, productsListItem.price_old/100) {
+                                basketViewModel.addNewProduct(productsListItem)
+                                basketListContainsProduct = basketViewModel.detectProductOwn(productsListItem)}
+                        } //TODO add
+                    }
                 }
             }
         }

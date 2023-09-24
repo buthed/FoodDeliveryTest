@@ -8,8 +8,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.navigation.compose.rememberNavController
-import com.tematihonov.fooddeliverytest.navigation.FoodDeliveryNavHost
+import com.tematihonov.fooddeliverytest.presentation.catalog.CatalogScreen
 import com.tematihonov.fooddeliverytest.presentation.ui.theme.FoodDeliveryTestTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -25,8 +24,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val foodDeliveryNavigate = rememberNavController()
-                    FoodDeliveryNavHost(foodDeliveryNavigate)
+                    CatalogScreen()
                 }
             }
         }

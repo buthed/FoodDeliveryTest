@@ -34,7 +34,11 @@ import com.tematihonov.fooddeliverytest.presentation.ui.spacing
 import com.tematihonov.fooddeliverytest.presentation.ui.theme.Typography
 
 @Composable
-fun ProductItem(currentProduct: ProductsListItem?, backClick: () -> Unit) {
+fun ProductItem(
+    currentProduct: ProductsListItem?,
+    backClick: () -> Unit,
+    purchaseClick: () -> Unit,
+) {
     if (currentProduct != null) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopStart) {
             Column(
@@ -74,7 +78,7 @@ fun ProductItem(currentProduct: ProductsListItem?, backClick: () -> Unit) {
                         vertical = MaterialTheme.spacing.small2
                     )
                 ) {
-                    ButtonPurchaseWithIcon(buttonPurchase = {}, totalPrice = stringResource(id = R.string.add_to_cart_for, currentProduct.price_current/100)) //TODO check add click
+                    ButtonPurchaseWithIcon(buttonPurchase = purchaseClick, totalPrice = stringResource(id = R.string.add_to_cart_for, currentProduct.price_current/100)) //TODO check add click
                 }
             }
             Box(Modifier.padding(MaterialTheme.spacing.medium2)) {

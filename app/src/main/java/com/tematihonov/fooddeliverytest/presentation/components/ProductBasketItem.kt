@@ -14,6 +14,10 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,12 +26,14 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.tematihonov.fooddeliverytest.R
+import com.tematihonov.fooddeliverytest.domain.models.responceProducts.ProductsListItem
+import com.tematihonov.fooddeliverytest.presentation.basket.BasketViewModel
 import com.tematihonov.fooddeliverytest.presentation.ui.colors
 import com.tematihonov.fooddeliverytest.presentation.ui.spacing
 import com.tematihonov.fooddeliverytest.presentation.ui.theme.Typography
 
 @Composable
-fun ProductBasketItem() {
+fun ProductBasketItem(productsListItem: ProductsListItem, basketViewModel: BasketViewModel) {
     Box(Modifier.background(Color.White).height(130.dp).fillMaxWidth(), contentAlignment = Alignment.BottomCenter) {
         Row(Modifier.padding(MaterialTheme.spacing.medium2).background(Color.White).fillMaxWidth(),
             verticalAlignment = Alignment.Bottom,
@@ -39,19 +45,22 @@ fun ProductBasketItem() {
                 Image(painter = painterResource(id = R.drawable.item), contentDescription = "",
                     modifier = Modifier.size(96.dp))
                 Column(verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier.height(96.dp)) {
-                    Text(text = "Том Ям", style = Typography.headlineMedium)
+                    Text(text = productsListItem.name, style = Typography.headlineMedium)
+                    var currentCount by remember { mutableStateOf(basketViewModel.detectProductCount(productsListItem)) }
                     ItemCardCounter(
-                        currentCount = 0,
-                        minusCount = {},
-                        plusCount = {},
+                        currentCount = currentCount,
+                        minusCount = { basketViewModel.plusMinusCount(productsListItem, false)
+                            currentCount = basketViewModel.detectProductCount(productsListItem) },
+                        plusCount = { basketViewModel.plusMinusCount(productsListItem, true)
+                            currentCount = basketViewModel.detectProductCount(productsListItem) },
                     )
                 }
             }
             Column() {
-                Text(text = "$480 ₽", style = Typography.bodySmall) //TODO add
-                if (true) { //TODO add
+                Text(text = "${productsListItem.price_current/100} ₽", style = Typography.bodySmall) //TODO add
+                if (productsListItem.price_old != 0) { //TODO add
                     Text(
-                        text = "$520 ₽",
+                        text = "${productsListItem.price_old/100} ₽",
                         style = Typography.bodySmall,
                         color = MaterialTheme.colors.textGrayDiscount,
                         textDecoration = TextDecoration.LineThrough
@@ -67,5 +76,5 @@ fun ProductBasketItem() {
 @Preview
 @Composable
 fun ProductBasketItemPreview() {
-    ProductBasketItem()
+    //ProductBasketItem(it)
 }

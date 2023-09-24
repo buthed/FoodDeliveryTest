@@ -20,6 +20,8 @@ class CatalogViewModel @Inject constructor(
     private val networkUseCase: NetworkUseCase
 ): ViewModel() {
 
+    var basketScreenVisibility by mutableStateOf(false)
+
     var catalogCategories by mutableStateOf(emptyList<CategoriesListItem>())
     var productsList by mutableStateOf(emptyList<ProductsListItem>())
     var tagsList by mutableStateOf(emptyList<TagsListItem>())
@@ -34,6 +36,8 @@ class CatalogViewModel @Inject constructor(
     var isLoadingCategories by mutableStateOf(true)
     var isLoadingProducts by mutableStateOf(true)
     var isLoadingTags by mutableStateOf(true)
+
+
 
     init {
         viewModelScope.launch {
