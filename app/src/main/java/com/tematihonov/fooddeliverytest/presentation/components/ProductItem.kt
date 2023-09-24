@@ -78,7 +78,9 @@ fun ProductItem(
                         vertical = MaterialTheme.spacing.small2
                     )
                 ) {
-                    ButtonPurchaseWithIcon(buttonPurchase = purchaseClick, totalPrice = stringResource(id = R.string.add_to_cart_for, currentProduct.price_current/100)) //TODO check add click
+                    ButtonPurchaseWithIcon(
+                        buttonPurchase = purchaseClick,
+                        totalPrice = stringResource(id = R.string.add_to_cart_for, currentProduct.price_current/100))
                 }
             }
             Box(Modifier.padding(MaterialTheme.spacing.medium2)) {

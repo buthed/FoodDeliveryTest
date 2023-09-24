@@ -10,10 +10,10 @@
     <string name="cart">Корзина</string>
     <string name="order_for">Заказать за %1$d ₽</string>
     <string name="find_a_dish">Найти блюдо</string>
-    <string name="enter_name_of_dish">Введите название блюда, которое ищете</string>
+    <string name="enter_name_of_dish">Введите название блюда,\nкоторое ищете</string>
     <string name="select_dishes">Подобрать блюда</string>
     <string name="ready">Готово</string>
     <string name="nothing_was_found">Ничего не нашлось :(</string>
-    <string name="there_are_no_such_dishes">Таких блюд нет :( Попробуйте изменить фильтры</string>
+    <string name="there_are_no_such_dishes">Таких блюд нет :(\nПопробуйте изменить фильтры</string>
     <string name="empty_select_dishes">Пусто, выберите блюда в каталоге :)</string>
 </resources>

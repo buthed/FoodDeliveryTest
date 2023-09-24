@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -56,9 +57,9 @@ fun ProductBasketItem(productsListItem: ProductsListItem, basketViewModel: Baske
                     )
                 }
             }
-            Column() {
-                Text(text = "${productsListItem.price_current/100} ₽", style = Typography.bodySmall) //TODO add
-                if (productsListItem.price_old != 0) { //TODO add
+            Column(Modifier.width(100.dp), horizontalAlignment = Alignment.End) {
+                Text(text = "${productsListItem.price_current/100} ₽", style = Typography.bodySmall)
+                if (productsListItem.price_old != 0) {
                     Text(
                         text = "${productsListItem.price_old/100} ₽",
                         style = Typography.bodySmall,

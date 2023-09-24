@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tematihonov.fooddeliverytest.R
@@ -43,7 +44,6 @@ fun ProductCatalogItem(
             .clip(RoundedCornerShape(8.dp)),
         contentAlignment = Alignment.TopStart
     ) {
-        //TODO add icon
         Column(
             modifier = Modifier
                 .background(MaterialTheme.colors.backgroundCard)
@@ -61,15 +61,17 @@ fun ProductCatalogItem(
                 )
             ) {
                 Text(
-                    text = productsListItem.name, //TODO change to 1 line?
+                    text = productsListItem.name,
                     style = Typography.headlineMedium,
-                    color = Color.Black
-                ) //TODO add
+                    color = Color.Black,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
                 Text(
                     text = "${productsListItem.measure} ${productsListItem.measure_unit}",
                     style = Typography.headlineMedium,
                     color = MaterialTheme.colors.textGray
-                ) //TODO add
+                )
             }
             Box(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
                 var basketListContainsProduct by remember { mutableStateOf(basketViewModel.detectProductOwn(productsListItem)) }
@@ -87,7 +89,7 @@ fun ProductCatalogItem(
                         )
                     }
                     false -> {
-                        if (productsListItem.price_old == 0) { //TODO add
+                        if (productsListItem.price_old == 0) {
                             ButtonAddToCard(productsListItem.price_current/100) {
                                 basketViewModel.addNewProduct(productsListItem)
                                 basketListContainsProduct = basketViewModel.detectProductOwn(productsListItem)}
@@ -95,7 +97,7 @@ fun ProductCatalogItem(
                             ButtonAddToCardDiscount(productsListItem.price_current/100, productsListItem.price_old/100) {
                                 basketViewModel.addNewProduct(productsListItem)
                                 basketListContainsProduct = basketViewModel.detectProductOwn(productsListItem)}
-                        } //TODO add
+                        }
                     }
                 }
             }

@@ -15,7 +15,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,6 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.tematihonov.fooddeliverytest.R
+import com.tematihonov.fooddeliverytest.domain.models.responceProducts.ProductsListItem
 import com.tematihonov.fooddeliverytest.presentation.catalog.CatalogViewModel
 import com.tematihonov.fooddeliverytest.presentation.ui.colors
 import com.tematihonov.fooddeliverytest.presentation.ui.spacing
@@ -67,7 +67,10 @@ fun CustomAppBar(
                         ButtonFilter(onFilterClicked = onFilterClicked)
                     },
                     actions =  {
-                        IconButton(onClick = { catalogViewModel.searchAppBarState = SearchAppBarState.OPENED }) {
+                        IconButton(onClick = {
+                            catalogViewModel.searchAppBarState = SearchAppBarState.OPENED
+                            catalogViewModel.productsList = ArrayList<ProductsListItem>()
+                        }) {
                             Image(
                                 painter = painterResource(id = R.drawable.search), contentDescription = "",
                                 Modifier
@@ -108,6 +111,7 @@ fun CustomAppBar(
                                 .padding(1.dp)
                                 .clickable {
                                     catalogViewModel.searchAppBarState = SearchAppBarState.CLOSED
+                                    catalogViewModel.checkCategories()
                                 }, tint = MaterialTheme.colors.mainOrange)
                     },
                     actions =  {
@@ -144,6 +148,5 @@ fun BasketTopBar(backClick: () -> Unit) {
                 tint = MaterialTheme.colors.mainOrange)
         },
         modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium2),
-        colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.White)
     )
 }

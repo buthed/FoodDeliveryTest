@@ -31,19 +31,24 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.tematihonov.fooddeliverytest.R
 import com.tematihonov.fooddeliverytest.presentation.basket.BasketScreen
 import com.tematihonov.fooddeliverytest.presentation.basket.BasketViewModel
+import com.tematihonov.fooddeliverytest.presentation.components.BottomShadow
 import com.tematihonov.fooddeliverytest.presentation.components.BottomSheet
 import com.tematihonov.fooddeliverytest.presentation.components.ButtonPurchaseWithIcon
 import com.tematihonov.fooddeliverytest.presentation.components.Category
 import com.tematihonov.fooddeliverytest.presentation.components.CustomAppBar
+import com.tematihonov.fooddeliverytest.presentation.components.InformationScreen
 import com.tematihonov.fooddeliverytest.presentation.components.ProductCatalogItem
 import com.tematihonov.fooddeliverytest.presentation.components.ProductItem
 import com.tematihonov.fooddeliverytest.presentation.components.SelectedCategory
 import com.tematihonov.fooddeliverytest.presentation.ui.colors
 import com.tematihonov.fooddeliverytest.presentation.ui.spacing
+import com.tematihonov.fooddeliverytest.utils.BackHandler
 import com.tematihonov.fooddeliverytest.utils.SearchAppBarState
 import kotlinx.coroutines.launch
 
@@ -55,8 +60,12 @@ fun CatalogScreen() {
 
     val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState)
+    
     val coroutine = rememberCoroutineScope()
 
+    // Delete BackPress from first screen
+    BackHandler(onBack = { })
+    
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         sheetContent = {
@@ -81,6 +90,7 @@ fun CatalogScreen() {
                         .background(Color.White)
                         .fillMaxSize()
                 ) {
+                    BottomShadow()
                     LazyRow(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -114,16 +124,21 @@ fun CatalogScreen() {
                             )
                         }
                     } else {
-                        LazyVerticalGrid(
-                            columns = GridCells.Fixed(2), modifier = Modifier
-                                .fillMaxSize()
-                                .padding(MaterialTheme.spacing.medium2)
-                                .weight(1f, fill = false),
-                            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall),
-                            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
-                        ) {
-                            items(viewModel.productsList) {
-                                ProductCatalogItem(productsListItem = it) { viewModel.selectNewProduct(it) }
+                        when (viewModel.productsList.isEmpty()) {
+                            true -> InformationScreen(stringResource(id = R.string.there_are_no_such_dishes))
+                            false -> {
+                                LazyVerticalGrid(
+                                    columns = GridCells.Fixed(2), modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(MaterialTheme.spacing.medium2)
+                                        .weight(1f, fill = false),
+                                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall),
+                                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
+                                ) {
+                                    items(viewModel.productsList) {
+                                        ProductCatalogItem(productsListItem = it) { viewModel.selectNewProduct(it) }
+                                    }
+                                }
                             }
                         }
                     }
@@ -138,34 +153,49 @@ fun CatalogScreen() {
                 }
             }
             SearchAppBarState.OPENED -> {
-                if (viewModel.isLoadingProducts) {
-                    Box(
-                        Modifier
-                            .fillMaxWidth()
-                            .height(500.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(100.dp),
-                            color = MaterialTheme.colors.mainOrange
-                        )
-                    }
-                } else {
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(2), modifier = Modifier
-                            .fillMaxSize()
-                            .padding(MaterialTheme.spacing.medium2),
-                        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall),
-                        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
-                    ) {
-                        items(viewModel.productsList) {
-                            ProductCatalogItem(productsListItem = it) { viewModel.selectNewProduct(it) }
+                Column {
+                    BottomShadow()
+                    when (viewModel.isLoadingProducts) {
+                        true -> {
+                            Box(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .height(500.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(100.dp),
+                                    color = MaterialTheme.colors.mainOrange
+                                )
+                            }
+                        }
+                        false -> {
+                            when (viewModel.productsList.isEmpty()) {
+                                true -> {
+                                    when (viewModel.searchStartWriting) {
+                                        true -> InformationScreen(stringResource(id = R.string.nothing_was_found))
+                                        false -> InformationScreen(stringResource(id = R.string.enter_name_of_dish))
+                                    }
+                                }
+                                false -> {
+                                    LazyVerticalGrid(
+                                        columns = GridCells.Fixed(2), modifier = Modifier
+                                            .fillMaxSize()
+                                            .padding(MaterialTheme.spacing.medium2),
+                                        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall),
+                                        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
+                                    ) {
+                                        items(viewModel.productsList) {
+                                            ProductCatalogItem(productsListItem = it) { viewModel.selectNewProduct(it) }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
         }
-
     }
     
     AnimatedVisibility(visible = viewModel.isLoadingCategories,
@@ -190,4 +220,9 @@ fun CatalogScreen() {
     AnimatedVisibility(viewModel.basketScreenVisibility) {
         BasketScreen(viewModel)
     }
+}
+
+@Composable
+fun BackPressHandler(onBackPressed: Any) {
+
 }

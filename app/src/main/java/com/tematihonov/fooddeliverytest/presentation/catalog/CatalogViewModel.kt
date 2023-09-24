@@ -32,12 +32,11 @@ class CatalogViewModel @Inject constructor(
     var currentTags by mutableStateOf(arrayListOf<TagsListItem>())
     var tagsSelected by mutableStateOf(0)
     var searchAppBarState by mutableStateOf(SearchAppBarState.CLOSED)
+    var searchStartWriting by mutableStateOf(false)
 
     var isLoadingCategories by mutableStateOf(true)
     var isLoadingProducts by mutableStateOf(true)
     var isLoadingTags by mutableStateOf(true)
-
-
 
     init {
         viewModelScope.launch {
@@ -96,6 +95,7 @@ class CatalogViewModel @Inject constructor(
         viewModelScope.launch {
             if (search.isEmpty()) {
                 productsList = ArrayList<ProductsListItem>()
+                searchStartWriting = false
             } else {
                 isLoadingProducts = true
                 val result = networkUseCase.getProductsUseCase.invoke()
