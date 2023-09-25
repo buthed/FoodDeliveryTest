@@ -1,6 +1,5 @@
 package com.tematihonov.fooddeliverytest.presentation.catalog
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -141,7 +140,6 @@ fun CatalogScreen() {
                                         ProductCatalogItem(productsListItem = it) { viewModel.selectNewProduct(it) }
                                     }
                                 }
-                                Log.d("GGG", "Catalog screen update List")
                             }
                         }
                     }
@@ -223,9 +221,4 @@ fun CatalogScreen() {
     AnimatedVisibility(viewModel.basketScreenVisibility) {
         BasketScreen(viewModel)
     }
-}
-
-@Composable
-fun BackPressHandler(onBackPressed: Any) {
-
 }

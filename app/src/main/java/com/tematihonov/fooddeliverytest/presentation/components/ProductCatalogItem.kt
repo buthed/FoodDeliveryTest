@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -75,22 +76,20 @@ fun ProductCatalogItem(
                     color = MaterialTheme.colors.textGray
                 )
             }
-            Box(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
+            Box(modifier = Modifier.height(72.dp).padding(MaterialTheme.spacing.medium)) { //TODO fix plus box
                 var basketListContainsProduct by remember { mutableStateOf(basketViewModel.detectProductOwn(productsListItem)) }
-
-                when (basketListContainsProduct && basketViewModel.detectProductCount(productsListItem) != 0) {
+                basketListContainsProduct = basketViewModel.detectProductOwn(productsListItem)
+                when (basketListContainsProduct) {
                     true -> {
                         var currentCount by remember { mutableStateOf(basketViewModel.detectProductCount(productsListItem)) }
-
                         CartRowCounter(
                             currentCount = currentCount,
                             minusCount = { basketViewModel.plusMinusCount(productsListItem, false)
                                 basketListContainsProduct = basketViewModel.detectProductOwn(productsListItem)
-                                if (currentCount != 1) currentCount = basketViewModel.detectProductCount(productsListItem)
+                                if (currentCount >= 2) currentCount = basketViewModel.detectProductCount(productsListItem)
                             },
                             plusCount = { basketViewModel.plusMinusCount(productsListItem, true)
-                                basketListContainsProduct = basketViewModel.detectProductOwn(productsListItem)
-                                currentCount = basketViewModel.detectProductCount(productsListItem)},
+                                currentCount = basketViewModel.detectProductCount(productsListItem)}
                         )
                     }
                     false -> {

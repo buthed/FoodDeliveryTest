@@ -36,8 +36,7 @@ class BasketViewModel @Inject constructor(
     }
 
     fun detectProductCount(product: ProductsListItem): Int {
-        Log.d("GGG", "productsInBasket.size ${productsInBasket.size} productsInBasketCount.size ${productsInBasketCount.size} productsInBasketCount[productsInBasket.indexOf(product)] ${productsInBasketCount[productsInBasket.indexOf(product)]}")
-        if (productsInBasket.size == 0 && productsInBasketCount.size == 0) return 0
+        if (productsInBasket.indexOf(product) == -1) return 0
         return productsInBasketCount[productsInBasket.indexOf(product)]
     }
 
@@ -53,8 +52,13 @@ class BasketViewModel @Inject constructor(
             false -> {
                 when (productsInBasketCount[productsInBasket.indexOf(product)] <= 1) {
                     true -> {
-                        productsInBasketCount.removeAt(productsInBasket.indexOf(product))
-                        productsInBasket.removeAt(productsInBasket.indexOf(product))
+                        val index = productsInBasket.indexOf(product)
+                        Log.d("GGG", "before productsInBasketCount ${productsInBasketCount}")
+                        Log.d("GGG", "before productsInBasket ${productsInBasket}")
+                        productsInBasketCount.removeAt(index)
+                        productsInBasket.removeAt(index)
+                        Log.d("GGG", "after productsInBasketCount ${productsInBasketCount}")
+                        Log.d("GGG", "after productsInBasket ${productsInBasket}")
                     }
                     false -> {
                         productsInBasketCount[productsInBasket.indexOf(product)] -= 1

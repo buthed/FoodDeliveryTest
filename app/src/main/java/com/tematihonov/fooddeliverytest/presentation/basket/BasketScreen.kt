@@ -7,10 +7,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,10 +39,10 @@ fun BasketScreen(viewModel: CatalogViewModel) {
         BottomShadow()
         when (basketViewModel.productsInBasket.isNotEmpty()) {
             true -> {
+                Log.d("GGG", "productsInBasketCount ${basketViewModel.productsInBasketCount}")
                 LazyColumn() {
-                    items(basketViewModel.productsInBasket) {
-                        Log.d("GGG", "basket product ${it.name}")
-                        ProductBasketItem(it, basketViewModel)
+                    items(basketViewModel.productsInBasketCount.size) {
+                        ProductBasketItem(basketViewModel.productsInBasket[it], basketViewModel)
                     }
                 }
             }
@@ -58,10 +56,6 @@ fun BasketScreen(viewModel: CatalogViewModel) {
         Box(Modifier.padding(horizontal = MaterialTheme.spacing.medium2, vertical = MaterialTheme.spacing.small2)) {
             ButtonBasic(buttonClick = {}, text = stringResource(id = R.string.order_for, basketViewModel.totalPrice/100))
         }
-    }
-
-    LaunchedEffect(true) {
-        Log.d("GGG", "basket ${basketViewModel.productsInBasket}")
     }
 }
 

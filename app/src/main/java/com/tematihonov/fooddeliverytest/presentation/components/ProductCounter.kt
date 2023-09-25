@@ -99,6 +99,7 @@ fun CartRowCounter(
                     ambientColor = Color(0x801F1F1F)
                 )
                 .clip(RoundedCornerShape(8.dp))
+                .background(Color.White)
                 .padding(MaterialTheme.spacing.extraSmall)
                 .clickable(onClick = minusCount),
             contentAlignment = Alignment.Center
@@ -120,6 +121,7 @@ fun CartRowCounter(
                     ambientColor = Color(0x801F1F1F)
                 )
                 .clip(RoundedCornerShape(8.dp))
+                .background(Color.White)
                 .padding(MaterialTheme.spacing.extraSmall)
                 .clickable(onClick = plusCount),
             contentAlignment = Alignment.Center
