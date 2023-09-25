@@ -135,13 +135,24 @@ fun CatalogScreen() {
                                 when (viewModel.productsList.isEmpty()) {
                                     true -> InformationScreen(stringResource(id = R.string.there_are_no_such_dishes))
                                     false -> {
-                                        CatalogLazyGrid(
-                                            viewModel,
-                                            Modifier
+                                        LazyVerticalGrid(
+                                            columns = GridCells.Fixed(2), modifier = Modifier
                                                 .fillMaxSize()
                                                 .padding(MaterialTheme.spacing.medium2)
                                                 .weight(1f, fill = false),
-                                        )
+                                            horizontalArrangement = Arrangement.spacedBy(
+                                                MaterialTheme.spacing.extraSmall
+                                            ),
+                                            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
+                                        ) {
+                                            items(viewModel.productsList) {
+                                                ProductCatalogItem(productsListItem = it) {
+                                                    viewModel.selectNewProduct(
+                                                        it
+                                                    )
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }

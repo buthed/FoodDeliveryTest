@@ -97,6 +97,7 @@ fun CustomAppBar(
                             value = searchInput,
                             onValueChange = {
                                 searchInput = it
+                                catalogViewModel.searchStartWriting = true
                                 catalogViewModel.searchProducts(searchInput)
                             },
                             textStyle = Typography.bodyMedium,
