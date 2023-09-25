@@ -15,5 +15,5 @@
     <string name="ready">Готово</string>
     <string name="nothing_was_found">Ничего не нашлось :(</string>
     <string name="there_are_no_such_dishes">Таких блюд нет :(\nПопробуйте изменить фильтры</string>
-    <string name="empty_select_dishes">Пусто, выберите блюда в каталоге :)</string>
+    <string name="empty_select_dishes">Пусто, выберите блюда\nв каталоге :)</string>
 </resources>

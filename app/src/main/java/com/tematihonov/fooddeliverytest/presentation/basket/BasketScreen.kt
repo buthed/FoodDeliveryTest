@@ -23,6 +23,7 @@ import com.tematihonov.fooddeliverytest.presentation.catalog.CatalogViewModel
 import com.tematihonov.fooddeliverytest.presentation.components.BasketTopBar
 import com.tematihonov.fooddeliverytest.presentation.components.BottomShadow
 import com.tematihonov.fooddeliverytest.presentation.components.ButtonBasic
+import com.tematihonov.fooddeliverytest.presentation.components.InformationScreen
 import com.tematihonov.fooddeliverytest.presentation.components.ProductBasketItem
 import com.tematihonov.fooddeliverytest.presentation.ui.spacing
 import com.tematihonov.fooddeliverytest.utils.BackHandler
@@ -32,15 +33,26 @@ fun BasketScreen(viewModel: CatalogViewModel) {
     val basketViewModel = hiltViewModel<BasketViewModel>()
     BackHandler(onBack = { viewModel.basketScreenVisibility = false })
 
-    Column(Modifier.fillMaxSize().background(Color.White)) {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .background(Color.White)) {
         BasketTopBar { viewModel.basketScreenVisibility = false }
         BottomShadow()
-        LazyColumn() {
-            items(basketViewModel.productsInBasket) {
-                Log.d("GGG", "basket product ${it.name}")
-                ProductBasketItem(it, basketViewModel)
+        when (basketViewModel.productsInBasket.isNotEmpty()) {
+            true -> {
+                LazyColumn() {
+                    items(basketViewModel.productsInBasket) {
+                        Log.d("GGG", "basket product ${it.name}")
+                        ProductBasketItem(it, basketViewModel)
+                    }
+                }
+            }
+            false -> {
+                InformationScreen(infoText = stringResource(id = R.string.empty_select_dishes))
             }
         }
+        
     }
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
         Box(Modifier.padding(horizontal = MaterialTheme.spacing.medium2, vertical = MaterialTheme.spacing.small2)) {

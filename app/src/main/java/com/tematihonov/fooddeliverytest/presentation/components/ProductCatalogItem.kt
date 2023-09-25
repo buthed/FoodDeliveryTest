@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +39,7 @@ fun ProductCatalogItem(
     selectProduct: () -> Unit
 ) {
     val basketViewModel = hiltViewModel<BasketViewModel>()
+    val coroutine = rememberCoroutineScope()
     Box(
         modifier = Modifier
             .width(170.dp)
@@ -75,14 +77,17 @@ fun ProductCatalogItem(
             }
             Box(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
                 var basketListContainsProduct by remember { mutableStateOf(basketViewModel.detectProductOwn(productsListItem)) }
-                when (basketListContainsProduct) {
+
+                when (basketListContainsProduct && basketViewModel.detectProductCount(productsListItem) != 0) {
                     true -> {
                         var currentCount by remember { mutableStateOf(basketViewModel.detectProductCount(productsListItem)) }
+
                         CartRowCounter(
                             currentCount = currentCount,
                             minusCount = { basketViewModel.plusMinusCount(productsListItem, false)
                                 basketListContainsProduct = basketViewModel.detectProductOwn(productsListItem)
-                                currentCount = basketViewModel.detectProductCount(productsListItem)},
+                                if (currentCount != 1) currentCount = basketViewModel.detectProductCount(productsListItem)
+                            },
                             plusCount = { basketViewModel.plusMinusCount(productsListItem, true)
                                 basketListContainsProduct = basketViewModel.detectProductOwn(productsListItem)
                                 currentCount = basketViewModel.detectProductCount(productsListItem)},

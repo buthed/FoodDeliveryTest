@@ -1,5 +1,6 @@
 package com.tematihonov.fooddeliverytest.presentation.catalog
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -46,6 +47,7 @@ import com.tematihonov.fooddeliverytest.presentation.components.InformationScree
 import com.tematihonov.fooddeliverytest.presentation.components.ProductCatalogItem
 import com.tematihonov.fooddeliverytest.presentation.components.ProductItem
 import com.tematihonov.fooddeliverytest.presentation.components.SelectedCategory
+import com.tematihonov.fooddeliverytest.presentation.components.SplashScreen
 import com.tematihonov.fooddeliverytest.presentation.ui.colors
 import com.tematihonov.fooddeliverytest.presentation.ui.spacing
 import com.tematihonov.fooddeliverytest.utils.BackHandler
@@ -104,7 +106,7 @@ fun CatalogScreen() {
                                 viewModel.selectNewCategory(
                                     it.id
                                 )
-                            }, category = it.name) //TODO add selector
+                            }, category = it.name)
                             else Category(
                                 selectCategory = { viewModel.selectNewCategory(it.id) },
                                 category = it.name
@@ -139,6 +141,7 @@ fun CatalogScreen() {
                                         ProductCatalogItem(productsListItem = it) { viewModel.selectNewProduct(it) }
                                     }
                                 }
+                                Log.d("GGG", "Catalog screen update List")
                             }
                         }
                     }
@@ -147,7 +150,7 @@ fun CatalogScreen() {
                             ButtonPurchaseWithIcon(
                                 buttonPurchase = { viewModel.basketScreenVisibility = true },
                                 totalPrice = "${basketViewModel.totalPrice / 100} ₽"
-                            ) //TODO add del fix?
+                            )
                         }
                     }
                 }
@@ -202,7 +205,7 @@ fun CatalogScreen() {
         enter = fadeIn(),
         exit = fadeOut()
     ) {
-        //SplashScreen()
+        SplashScreen()
     }
 
     AnimatedVisibility(visible = viewModel.currentProductSelected,

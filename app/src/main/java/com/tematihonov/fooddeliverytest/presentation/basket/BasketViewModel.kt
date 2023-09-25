@@ -1,5 +1,6 @@
 package com.tematihonov.fooddeliverytest.presentation.basket
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -18,9 +19,13 @@ class BasketViewModel @Inject constructor(
     var productsInBasketCount by mutableStateOf(arrayListOf<Int>())
 
     fun addNewProduct(product: ProductsListItem) {
-        productsInBasket.add(product)
-        productsInBasketCount.add(1)
-        calculateTotalPrice()
+        if (productsInBasket.contains(product)) {
+            plusMinusCount(product,true)
+        } else {
+            productsInBasket.add(product)
+            productsInBasketCount.add(1)
+            calculateTotalPrice()
+        }
     }
 
     fun calculateTotalPrice() {
@@ -31,6 +36,8 @@ class BasketViewModel @Inject constructor(
     }
 
     fun detectProductCount(product: ProductsListItem): Int {
+        Log.d("GGG", "productsInBasket.size ${productsInBasket.size} productsInBasketCount.size ${productsInBasketCount.size} productsInBasketCount[productsInBasket.indexOf(product)] ${productsInBasketCount[productsInBasket.indexOf(product)]}")
+        if (productsInBasket.size == 0 && productsInBasketCount.size == 0) return 0
         return productsInBasketCount[productsInBasket.indexOf(product)]
     }
 
@@ -42,7 +49,6 @@ class BasketViewModel @Inject constructor(
         when (plusCount) {
             true -> {
                 productsInBasketCount[productsInBasket.indexOf(product)] += 1
-                calculateTotalPrice()
             }
             false -> {
                 when (productsInBasketCount[productsInBasket.indexOf(product)] <= 1) {
@@ -52,10 +58,10 @@ class BasketViewModel @Inject constructor(
                     }
                     false -> {
                         productsInBasketCount[productsInBasket.indexOf(product)] -= 1
-                        calculateTotalPrice()
                     }
                 }
             }
         }
+        calculateTotalPrice()
     }
 }
