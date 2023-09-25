@@ -41,36 +41,50 @@ fun ProductItem(
 ) {
     if (currentProduct != null) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopStart) {
-            Column(
-                Modifier
+            Column(Modifier
                     .background(Color.White)
-                    .verticalScroll(rememberScrollState())) {
+                    .verticalScroll(rememberScrollState())
+            ) {
                 Image(
                     painter = painterResource(id = R.drawable.item), contentDescription = "",
                     Modifier.fillMaxWidth(), contentScale = ContentScale.FillBounds
                 )
-                Column(
-                    Modifier
+                Column(Modifier
                         .fillMaxWidth()
                         .padding(horizontal = MaterialTheme.spacing.medium2)
                 ) {
-                    Text(text = currentProduct.name, style = Typography.titleLarge) 
+                    Text(text = currentProduct.name, style = Typography.titleLarge)
                     Text(
                         text = currentProduct.description,
                         style = Typography.bodyMedium,
                         color = MaterialTheme.colors.textGrayDiscount
                     )
                 }
-                Column(
-                    Modifier
+                Column(Modifier
                         .fillMaxWidth()
-                        .padding(top = MaterialTheme.spacing.large)) {
+                        .padding(top = MaterialTheme.spacing.large)
+                ) {
                     Divider(thickness = 1.dp, color = MaterialTheme.colors.textGrayDiscount)
-                    ProductItemRow(stringResource(id = R.string.weight),"${currentProduct.measure} ${currentProduct.measure_unit}")
-                    ProductItemRow(stringResource(id = R.string.energy_value),"${currentProduct.energy_per_100_grams} ккал")
-                    ProductItemRow(stringResource(id = R.string.squirrels),"${currentProduct.proteins_per_100_grams} ${currentProduct.measure_unit}")
-                    ProductItemRow(stringResource(id = R.string.fats),"${currentProduct.fats_per_100_grams} ${currentProduct.measure_unit}")
-                    ProductItemRow(stringResource(id = R.string.carbohydrates),"${currentProduct.carbohydrates_per_100_grams} ${currentProduct.measure_unit}")
+                    ProductItemRow(
+                        stringResource(id = R.string.weight),
+                        "${currentProduct.measure} ${currentProduct.measure_unit}"
+                    )
+                    ProductItemRow(
+                        stringResource(id = R.string.energy_value),
+                        "${currentProduct.energy_per_100_grams} ккал"
+                    )
+                    ProductItemRow(
+                        stringResource(id = R.string.squirrels),
+                        "${currentProduct.proteins_per_100_grams} ${currentProduct.measure_unit}"
+                    )
+                    ProductItemRow(
+                        stringResource(id = R.string.fats),
+                        "${currentProduct.fats_per_100_grams} ${currentProduct.measure_unit}"
+                    )
+                    ProductItemRow(
+                        stringResource(id = R.string.carbohydrates),
+                        "${currentProduct.carbohydrates_per_100_grams} ${currentProduct.measure_unit}"
+                    )
                 }
                 Box(
                     Modifier.padding(
@@ -80,23 +94,30 @@ fun ProductItem(
                 ) {
                     ButtonPurchaseWithIcon(
                         buttonPurchase = purchaseClick,
-                        totalPrice = stringResource(id = R.string.add_to_cart_for, currentProduct.price_current/100))
+                        totalPrice = stringResource(
+                            id = R.string.add_to_cart_for,
+                            currentProduct.price_current / 100
+                        )
+                    )
                 }
             }
             Box(Modifier.padding(MaterialTheme.spacing.medium2)) {
-                Box(
-                    Modifier
+                Box(Modifier
                         .size(44.dp)
                         .clip(RoundedCornerShape(100.dp))
                         .shadow(
                             elevation = 16.dp,
                             spotColor = Color(0x801F1F1F),
                             ambientColor = Color(0x801F1F1F)
-                        ), contentAlignment = Alignment.Center) {
-                    Image(painter = painterResource(id = R.drawable.arrowleft), contentDescription = "",
+                        ), contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.arrowleft),
+                        contentDescription = "",
                         modifier = Modifier
                             .size(24.dp)
-                            .clickable(onClick = backClick))
+                            .clickable(onClick = backClick)
+                    )
                 }
             }
         }
@@ -105,8 +126,7 @@ fun ProductItem(
 
 @Composable
 private fun ProductItemRow(stringResource: String, value: String) {
-    Row(
-        Modifier
+    Row(Modifier
             .fillMaxWidth()
             .padding(
                 horizontal = MaterialTheme.spacing.medium2,
@@ -122,9 +142,3 @@ private fun ProductItemRow(stringResource: String, value: String) {
     }
     Divider(thickness = 1.dp, color = MaterialTheme.colors.textGrayDiscount)
 }
-
-//@Preview
-//@Composable
-//fun ProductItemPreview() {
-//    ProductItem(viewModel.currentProduct) {}
-//}

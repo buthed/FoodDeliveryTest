@@ -17,7 +17,9 @@ import com.tematihonov.fooddeliverytest.presentation.ui.colors
 @Composable
 fun SplashScreen() {
     val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.splash_screen_animation))
-    Box(Modifier.fillMaxSize().background(MaterialTheme.colors.mainOrange)) {
+    Box(Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.mainOrange)) {
         LottieAnimation(composition = composition, iterations = LottieConstants.IterateForever)
     }
 }

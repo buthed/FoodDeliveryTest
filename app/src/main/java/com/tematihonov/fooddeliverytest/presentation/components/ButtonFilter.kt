@@ -37,14 +37,16 @@ fun ButtonFilter(
                 .clickable(onClick = onFilterClicked)
                 .layoutId("button")
         )
-        Box(modifier = Modifier.layoutId("filtersCount"),
+        Box(
+            modifier = Modifier.layoutId("filtersCount"),
             contentAlignment = Alignment.Center
         ) {
             Box(
                 Modifier
                     .size(17.dp)
                     .clip(RoundedCornerShape(size = 50.dp))
-                    .background(color = MaterialTheme.colors.mainOrange))
+                    .background(color = MaterialTheme.colors.mainOrange)
+            )
             Text(text = "${viewModel.tagsSelected}", style = Typography.headlineSmall)
         }
     }
@@ -71,6 +73,6 @@ fun buttonFilterConstraint(): ConstraintSet {
 @Composable
 fun CustomAppBarPreview() {
     ButtonFilter(
-        {  }
+        { }
     )
 }

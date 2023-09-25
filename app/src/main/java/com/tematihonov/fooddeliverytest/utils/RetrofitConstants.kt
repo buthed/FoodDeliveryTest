@@ -1,6 +1,7 @@
 package com.tematihonov.fooddeliverytest.utils
 
 object RetrofitConstants {
+    // These were links from Google Drive, but they stopped working after a while
 //    const val BASE_URL = "https://drive.google.com"
 //    const val PRODUCTS = "/uc?export=download&id=128hUGBg3biXOTmhbvx0xkYS-4sYye8HL"
 //    const val CATEGORIES = "/uc?export=download&id=1mU9wmvfaqiArQr_ZX0aedyuEnbj4LfMY"

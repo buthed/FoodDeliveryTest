@@ -28,8 +28,7 @@ import com.tematihonov.fooddeliverytest.presentation.ui.theme.Typography
 
 @Composable
 fun ButtonBasic(buttonClick: () -> Unit, text: String) {
-    Box(
-        modifier = Modifier
+    Box(modifier = Modifier
             .shadow(
                 elevation = 16.dp,
                 spotColor = Color(0x801F1F1F),
@@ -69,12 +68,15 @@ fun ButtonPurchaseWithIcon(buttonPurchase: () -> Unit, totalPrice: String) {
                 .clickable(onClick = buttonPurchase),
             contentAlignment = Alignment.Center
         ) {
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp),
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
             ) {
-                Image(painter = painterResource(id = R.drawable.cart), contentDescription = "",
-                    colorFilter = ColorFilter.tint(Color.White))
+                Image(
+                    painter = painterResource(id = R.drawable.cart), contentDescription = "",
+                    colorFilter = ColorFilter.tint(Color.White)
+                )
                 Text(text = totalPrice, style = Typography.bodySmall, color = Color.White)
             }
         }

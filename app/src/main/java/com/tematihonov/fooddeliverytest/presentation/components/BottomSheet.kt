@@ -35,22 +35,25 @@ import com.tematihonov.fooddeliverytest.presentation.ui.theme.Typography
 @Composable
 fun BottomSheet(tagsList: List<TagsListItem>, readyButton: () -> Unit) {
     Box(modifier = Modifier
-        .shadow(
-            elevation = 8.dp,
-            spotColor = Color(0x0D000000),
-            ambientColor = Color(0x0D000000)
-        )
-        .fillMaxWidth()
-        .clip(shape = RoundedCornerShape(size = 24.dp))
-        .background(color = Color(0xFFFFFFFF))
-        .padding(start = 24.dp, top = 32.dp, end = 24.dp, bottom = 32.dp)
+            .shadow(
+                elevation = 8.dp,
+                spotColor = Color(0x0D000000),
+                ambientColor = Color(0x0D000000)
+            )
+            .fillMaxWidth()
+            .clip(shape = RoundedCornerShape(size = 24.dp))
+            .background(color = Color(0xFFFFFFFF))
+            .padding(start = 24.dp, top = 32.dp, end = 24.dp, bottom = 32.dp)
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             Text(text = stringResource(id = R.string.select_dishes), style = Typography.titleMedium)
             LazyColumn() {
                 itemsIndexed(tagsList) { index, item ->
                     BottomSheetItem(item)
-                    if (index < tagsList.lastIndex)  Divider(thickness = 1.dp, color = MaterialTheme.colors.textGrayDiscount)
+                    if (index < tagsList.lastIndex) Divider(
+                        thickness = 1.dp,
+                        color = MaterialTheme.colors.textGrayDiscount
+                    )
 
                 }
             }
@@ -62,7 +65,8 @@ fun BottomSheet(tagsList: List<TagsListItem>, readyButton: () -> Unit) {
 @Composable
 fun BottomSheetItem(tag: TagsListItem) {
     val viewModel = hiltViewModel<CatalogViewModel>()
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
+    Row(
+        modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(tag.name, style = Typography.bodyMedium)

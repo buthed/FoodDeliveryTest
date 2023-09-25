@@ -36,17 +36,15 @@ import com.tematihonov.fooddeliverytest.presentation.ui.theme.Typography
 @Composable
 fun ProductCatalogItem(
     productsListItem: ProductsListItem,
-    selectProduct: () -> Unit
+    selectProduct: () -> Unit,
 ) {
     val basketViewModel = hiltViewModel<BasketViewModel>()
-    Box(
-        modifier = Modifier
+    Box(modifier = Modifier
             .width(170.dp)
             .clip(RoundedCornerShape(8.dp)),
         contentAlignment = Alignment.TopStart
     ) {
-        Column(
-            modifier = Modifier
+        Column(modifier = Modifier
                 .background(MaterialTheme.colors.backgroundCard)
                 .clickable(onClick = selectProduct),
         ) {
@@ -54,7 +52,8 @@ fun ProductCatalogItem(
                 painter = painterResource(id = R.drawable.item), contentDescription = "",
                 Modifier.size(170.dp)
             )
-            Column(verticalArrangement = Arrangement.spacedBy(4.dp),
+            Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp),
                 modifier = Modifier.padding(
                     start = MaterialTheme.spacing.medium,
                     end = MaterialTheme.spacing.medium,
@@ -74,31 +73,59 @@ fun ProductCatalogItem(
                     color = MaterialTheme.colors.textGray
                 )
             }
-            Box(modifier = Modifier.height(72.dp).padding(MaterialTheme.spacing.medium)) { //TODO fix plus box
-                var basketListContainsProduct by remember { mutableStateOf(basketViewModel.detectProductOwn(productsListItem)) }
+            Box(modifier = Modifier
+                    .height(72.dp)
+                    .padding(MaterialTheme.spacing.medium)
+            ) {
+                var basketListContainsProduct by remember {
+                    mutableStateOf(
+                        basketViewModel.detectProductOwn(
+                            productsListItem
+                        )
+                    )
+                }
                 basketListContainsProduct = basketViewModel.detectProductOwn(productsListItem)
                 when (basketListContainsProduct) {
                     true -> {
-                        var currentCount by remember { mutableStateOf(basketViewModel.detectProductCount(productsListItem)) }
+                        var currentCount by remember {
+                            mutableStateOf(
+                                basketViewModel.detectProductCount(
+                                    productsListItem
+                                )
+                            )
+                        }
                         CartRowCounter(
                             currentCount = currentCount,
-                            minusCount = { basketViewModel.plusMinusCount(productsListItem, false)
-                                basketListContainsProduct = basketViewModel.detectProductOwn(productsListItem)
-                                if (currentCount >= 2) currentCount = basketViewModel.detectProductCount(productsListItem)
+                            minusCount = {
+                                basketViewModel.plusMinusCount(productsListItem, false)
+                                basketListContainsProduct =
+                                    basketViewModel.detectProductOwn(productsListItem)
+                                if (currentCount >= 2) currentCount =
+                                    basketViewModel.detectProductCount(productsListItem)
                             },
-                            plusCount = { basketViewModel.plusMinusCount(productsListItem, true)
-                                currentCount = basketViewModel.detectProductCount(productsListItem)}
+                            plusCount = {
+                                basketViewModel.plusMinusCount(productsListItem, true)
+                                currentCount = basketViewModel.detectProductCount(productsListItem)
+                            }
                         )
                     }
+
                     false -> {
                         if (productsListItem.price_old == 0) {
-                            ButtonAddToCard(productsListItem.price_current/100) {
+                            ButtonAddToCard(productsListItem.price_current / 100) {
                                 basketViewModel.addNewProduct(productsListItem)
-                                basketListContainsProduct = basketViewModel.detectProductOwn(productsListItem)}
+                                basketListContainsProduct =
+                                    basketViewModel.detectProductOwn(productsListItem)
+                            }
                         } else {
-                            ButtonAddToCardDiscount(productsListItem.price_current/100, productsListItem.price_old/100) {
+                            ButtonAddToCardDiscount(
+                                productsListItem.price_current / 100,
+                                productsListItem.price_old / 100
+                            ) {
                                 basketViewModel.addNewProduct(productsListItem)
-                                basketListContainsProduct = basketViewModel.detectProductOwn(productsListItem)}
+                                basketListContainsProduct =
+                                    basketViewModel.detectProductOwn(productsListItem)
+                            }
                         }
                     }
                 }

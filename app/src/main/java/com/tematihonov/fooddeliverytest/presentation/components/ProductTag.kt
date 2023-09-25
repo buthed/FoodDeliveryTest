@@ -14,8 +14,7 @@ import com.tematihonov.fooddeliverytest.R
 @Composable
 fun ProductTag(tag: Int) {
     if (tag == 2 || tag == 4 || tag == 5) {
-        Box(
-            modifier = Modifier
+        Box(modifier = Modifier
                 .size(34.dp)
                 .padding(5.dp),
             contentAlignment = Alignment.Center

@@ -15,7 +15,16 @@ import com.tematihonov.fooddeliverytest.presentation.ui.theme.Typography
 
 @Composable
 fun InformationScreen(infoText: String) {
-    Box(modifier = Modifier.fillMaxSize().padding(bottom = 32.dp), contentAlignment = Alignment.Center) {
-        Text(text = infoText, style = Typography.bodyMedium, color = MaterialTheme.colors.textGrayDiscount, textAlign = TextAlign.Center)
+    Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = 32.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = infoText,
+            style = Typography.bodyMedium,
+            color = MaterialTheme.colors.textGrayDiscount,
+            textAlign = TextAlign.Center
+        )
     }
 }

@@ -1,6 +1,5 @@
 package com.tematihonov.fooddeliverytest.presentation.basket
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,9 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.compose.rememberNavController
 import com.tematihonov.fooddeliverytest.R
 import com.tematihonov.fooddeliverytest.presentation.catalog.CatalogViewModel
 import com.tematihonov.fooddeliverytest.presentation.components.BasketTopBar
@@ -29,40 +26,43 @@ import com.tematihonov.fooddeliverytest.utils.BackHandler
 @Composable
 fun BasketScreen(viewModel: CatalogViewModel) {
     val basketViewModel = hiltViewModel<BasketViewModel>()
+
+    // Delete BackPress from first screen
     BackHandler(onBack = { viewModel.basketScreenVisibility = false })
 
     Column(
         Modifier
             .fillMaxSize()
-            .background(Color.White)) {
+            .background(Color.White)
+    ) {
         BasketTopBar { viewModel.basketScreenVisibility = false }
         BottomShadow()
         when (basketViewModel.productsInBasket.isNotEmpty()) {
             true -> {
-                Log.d("GGG", "productsInBasketCount ${basketViewModel.productsInBasketCount}")
                 LazyColumn() {
                     items(basketViewModel.productsInBasketCount.size) {
                         ProductBasketItem(basketViewModel.productsInBasket[it], basketViewModel)
                     }
                 }
             }
+
             false -> {
                 InformationScreen(infoText = stringResource(id = R.string.empty_select_dishes))
             }
         }
-        
     }
+
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
-        Box(Modifier.padding(horizontal = MaterialTheme.spacing.medium2, vertical = MaterialTheme.spacing.small2)) {
-            ButtonBasic(buttonClick = {}, text = stringResource(id = R.string.order_for, basketViewModel.totalPrice/100))
+        Box(
+            Modifier.padding(
+                horizontal = MaterialTheme.spacing.medium2,
+                vertical = MaterialTheme.spacing.small2
+            )
+        ) {
+            ButtonBasic(
+                buttonClick = {},
+                text = stringResource(id = R.string.order_for, basketViewModel.totalPrice / 100)
+            )
         }
     }
-}
-
-
-@Preview
-@Composable
-fun BasketScreenPreview() {
-    val foodDeliveryNavigate = rememberNavController()
-    //BasketScreen(foodDeliveryNavigate, productsInBasket, productsInBasketCount)
 }

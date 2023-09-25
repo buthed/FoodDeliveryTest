@@ -37,8 +37,7 @@ fun ItemCardCounter(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Box(
-            modifier = Modifier
+        Box(modifier = Modifier
                 .shadow(
                     elevation = 16.dp,
                     spotColor = Color(0x801F1F1F),
@@ -59,8 +58,7 @@ fun ItemCardCounter(
         Box(modifier = Modifier.width(44.dp), contentAlignment = Alignment.Center) {
             Text(text = "$currentCount", style = Typography.bodySmall)
         }
-        Box(
-            modifier = Modifier
+        Box(modifier = Modifier
                 .shadow(
                     elevation = 16.dp,
                     spotColor = Color(0x801F1F1F),
@@ -91,8 +89,7 @@ fun CartRowCounter(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Box(
-            modifier = Modifier
+        Box(modifier = Modifier
                 .shadow(
                     elevation = 16.dp,
                     spotColor = Color(0x801F1F1F),
@@ -113,8 +110,7 @@ fun CartRowCounter(
         Box(modifier = Modifier.width(44.dp), contentAlignment = Alignment.Center) {
             Text(text = "$currentCount", style = Typography.bodySmall)
         }
-        Box(
-            modifier = Modifier
+        Box(modifier = Modifier
                 .shadow(
                     elevation = 16.dp,
                     spotColor = Color(0x801F1F1F),

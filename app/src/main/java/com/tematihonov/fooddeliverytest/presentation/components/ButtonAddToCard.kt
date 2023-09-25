@@ -45,8 +45,7 @@ fun ButtonAddToCard(priceCurrent: Int, addToCard: () -> Unit) {
 
 @Composable
 fun ButtonAddToCardDiscount(priceCurrent: Int, priceOld: Int, addToCard: () -> Unit) {
-    Box(
-        modifier = Modifier
+    Box(modifier = Modifier
             .shadow(
                 elevation = 16.dp,
                 spotColor = Color(0x801F1F1F),

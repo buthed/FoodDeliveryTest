@@ -19,5 +19,4 @@ interface ApiService {
 
     @GET(TAGS)
     suspend fun getTags(): Response<ArrayList<TagsListItem>>
-
 }

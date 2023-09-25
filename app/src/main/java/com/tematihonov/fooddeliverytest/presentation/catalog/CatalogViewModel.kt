@@ -17,11 +17,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CatalogViewModel @Inject constructor(
-    private val networkUseCase: NetworkUseCase
-): ViewModel() {
+    private val networkUseCase: NetworkUseCase,
+) : ViewModel() {
 
     var basketScreenVisibility by mutableStateOf(false)
 
+    // Api Lists
     var catalogCategories by mutableStateOf(emptyList<CategoriesListItem>())
     var productsList by mutableStateOf(emptyList<ProductsListItem>())
     var tagsList by mutableStateOf(emptyList<TagsListItem>())
@@ -34,6 +35,7 @@ class CatalogViewModel @Inject constructor(
     var searchAppBarState by mutableStateOf(SearchAppBarState.CLOSED)
     var searchStartWriting by mutableStateOf(false)
 
+    // Loadings vars
     var isLoadingCategories by mutableStateOf(true)
     var isLoadingProducts by mutableStateOf(true)
     var isLoadingTags by mutableStateOf(true)
@@ -83,7 +85,7 @@ class CatalogViewModel @Inject constructor(
     fun searchProducts(search: String) {
         viewModelScope.launch {
             if (search.isEmpty()) {
-                productsList = ArrayList<ProductsListItem>()
+                productsList = ArrayList()
                 searchStartWriting = false
             } else {
                 isLoadingProducts = true
@@ -101,7 +103,7 @@ class CatalogViewModel @Inject constructor(
         }
     }
 
-    fun checkTags() {
+    private fun checkTags() {
         viewModelScope.launch {
             val result = networkUseCase.getTagsUseCase.invoke()
             isLoadingTags = true
@@ -125,16 +127,22 @@ class CatalogViewModel @Inject constructor(
     }
 
     fun selectNewProduct(productsListItem: ProductsListItem?) {
-        currentProductSelected =  (productsListItem != null)
+        currentProductSelected = (productsListItem != null)
         currentProduct = productsListItem
     }
 
     fun initViewModel() {
         viewModelScope.launch {
             do {
-                if (isLoadingCategories)  { checkCategories() }
-                if (isLoadingProducts) { checkProducts(0) }
-                if (isLoadingTags)  { checkTags() }
+                if (isLoadingCategories) {
+                    checkCategories()
+                }
+                if (isLoadingProducts) {
+                    checkProducts(0)
+                }
+                if (isLoadingTags) {
+                    checkTags()
+                }
                 delay(5000)
             } while (isLoadingProducts || isLoadingTags || isLoadingCategories)
         }

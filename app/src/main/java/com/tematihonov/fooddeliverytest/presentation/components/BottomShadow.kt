@@ -13,16 +13,17 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun BottomShadow(alpha: Float = 0.1f, height: Dp = 8.dp) {
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .height(height)
-        .background(
-            brush = Brush.verticalGradient(
-                colors = listOf(
-                    Color(0x1A000000).copy(alpha = alpha),
-                    Color.Transparent,
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(height)
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color(0x1A000000).copy(alpha = alpha),
+                        Color.Transparent,
+                    )
                 )
             )
-        )
     )
 }

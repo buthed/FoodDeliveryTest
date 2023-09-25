@@ -43,19 +43,20 @@ fun CustomAppBar(
     catalogViewModel: CatalogViewModel,
     searchAppBarState: SearchAppBarState,
 ) {
-    Box(
-        modifier = Modifier
+    Box(modifier = Modifier
             .height(60.dp)
             .fillMaxWidth()
             .padding(horizontal = MaterialTheme.spacing.extraSmall),
         contentAlignment = Alignment.BottomCenter
     ) {
-        when(searchAppBarState) {
+        when (searchAppBarState) {
             SearchAppBarState.CLOSED -> {
                 TopAppBar(
                     title = {
                         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                            Image(painter = painterResource(id = R.drawable.logo), contentDescription = "",
+                            Image(
+                                painter = painterResource(id = R.drawable.logo),
+                                contentDescription = "",
                                 Modifier
                                     .height(44.dp)
                                     .padding(top = MaterialTheme.spacing.extraSmall),
@@ -66,31 +67,45 @@ fun CustomAppBar(
                     navigationIcon = {
                         ButtonFilter(onFilterClicked = onFilterClicked)
                     },
-                    actions =  {
+                    actions = {
                         IconButton(onClick = {
                             catalogViewModel.searchAppBarState = SearchAppBarState.OPENED
                             catalogViewModel.productsList = ArrayList<ProductsListItem>()
                         }) {
                             Image(
-                                painter = painterResource(id = R.drawable.search), contentDescription = "",
+                                painter = painterResource(id = R.drawable.search),
+                                contentDescription = "",
                                 Modifier
-                                    .size(24.dp))
+                                    .size(24.dp)
+                            )
                         }
                     },
-                    modifier = Modifier.shadow(elevation = 16.dp, spotColor = Color(0x1A000000), ambientColor = Color(0x1A000000))
+                    modifier = Modifier.shadow(
+                        elevation = 16.dp,
+                        spotColor = Color(0x1A000000),
+                        ambientColor = Color(0x1A000000)
+                    )
                 )
             }
+
             SearchAppBarState.OPENED -> {
                 var searchInput by remember { mutableStateOf("") }
 
                 TopAppBar(
                     title = {
-                        TextField(value = searchInput,
+                        TextField(
+                            value = searchInput,
                             onValueChange = {
                                 searchInput = it
-                                catalogViewModel.searchProducts(searchInput) },
+                                catalogViewModel.searchProducts(searchInput)
+                            },
                             textStyle = Typography.bodyMedium,
-                            placeholder = { Text(stringResource(id = R.string.find_a_dish), style = Typography.bodyMedium) },
+                            placeholder = {
+                                Text(
+                                    stringResource(id = R.string.find_a_dish),
+                                    style = Typography.bodyMedium
+                                )
+                            },
                             singleLine = true, //TODO fix length?
                             colors = TextFieldDefaults.textFieldColors(
                                 backgroundColor = Color.Transparent,
@@ -105,18 +120,22 @@ fun CustomAppBar(
                         )
                     },
                     navigationIcon = {
-                        Icon(painter = painterResource(id = R.drawable.arrowleft), contentDescription = "",
+                        Icon(painter = painterResource(id = R.drawable.arrowleft),
+                            contentDescription = "",
                             Modifier
                                 .size(24.dp)
                                 .padding(1.dp)
                                 .clickable {
                                     catalogViewModel.searchAppBarState = SearchAppBarState.CLOSED
                                     catalogViewModel.checkCategories()
-                                }, tint = MaterialTheme.colors.mainOrange)
+                                },
+                            tint = MaterialTheme.colors.mainOrange
+                        )
                     },
-                    actions =  {
-                        IconButton(onClick = {  }) {
-                            Icon(painter = painterResource(id = R.drawable.cancel), contentDescription = "",
+                    actions = {
+                        IconButton(onClick = { }) {
+                            Icon(painter = painterResource(id = R.drawable.cancel),
+                                contentDescription = "",
                                 Modifier
                                     .size(24.dp)
                                     .clickable {
@@ -136,16 +155,20 @@ fun CustomAppBar(
 fun BasketTopBar(backClick: () -> Unit) {
     TopAppBar(
         title = {
-            Text(text = stringResource(id = R.string.basket), style = Typography.titleSmall,
-                modifier = Modifier.padding(start = MaterialTheme.spacing.extraLarge))
+            Text(
+                text = stringResource(id = R.string.basket), style = Typography.titleSmall,
+                modifier = Modifier.padding(start = MaterialTheme.spacing.extraLarge)
+            )
         },
         navigationIcon = {
-            Icon(painter = painterResource(id = R.drawable.arrowleft), contentDescription = "",
+            Icon(
+                painter = painterResource(id = R.drawable.arrowleft), contentDescription = "",
                 Modifier
                     .size(24.dp)
                     .padding(1.dp)
                     .clickable(onClick = backClick),
-                tint = MaterialTheme.colors.mainOrange)
+                tint = MaterialTheme.colors.mainOrange
+            )
         },
         modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium2),
     )

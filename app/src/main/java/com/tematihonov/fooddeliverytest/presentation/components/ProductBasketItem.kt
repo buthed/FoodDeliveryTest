@@ -34,52 +34,86 @@ import com.tematihonov.fooddeliverytest.presentation.ui.theme.Typography
 
 @Composable
 fun ProductBasketItem(productsListItem: ProductsListItem, basketViewModel: BasketViewModel) {
-    var basketListContainsProduct by remember { mutableStateOf(basketViewModel.detectProductOwn(productsListItem)) }
+    var basketListContainsProduct by remember {
+        mutableStateOf(
+            basketViewModel.detectProductOwn(
+                productsListItem
+            )
+        )
+    }
 
     when (basketListContainsProduct) {
         true -> {
-            Box(
-                Modifier
+            Box(Modifier
                     .background(Color.White)
                     .height(130.dp)
-                    .fillMaxWidth(), contentAlignment = Alignment.BottomCenter) {
-                Row(
-                    Modifier
+                    .fillMaxWidth(), contentAlignment = Alignment.BottomCenter
+            ) {
+                Row(Modifier
                         .padding(MaterialTheme.spacing.medium2)
                         .background(Color.White)
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.Bottom,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Row(modifier = Modifier.height(96.dp),
+                    Row(
+                        modifier = Modifier.height(96.dp),
                         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium2)
                     ) {
-                        Image(painter = painterResource(id = R.drawable.item), contentDescription = "",
-                            modifier = Modifier.size(96.dp))
-                        when (basketListContainsProduct && basketViewModel.detectProductCount(productsListItem) != 0) {
+                        Image(
+                            painter = painterResource(id = R.drawable.item),
+                            contentDescription = "",
+                            modifier = Modifier.size(96.dp)
+                        )
+                        when (basketListContainsProduct &&
+                                basketViewModel.detectProductCount(productsListItem) != 0
+                        ) {
                             true -> {
-                                Column(verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier.height(96.dp)) {
-                                    Text(text = productsListItem.name, style = Typography.headlineMedium)
-                                    var currentCount by remember { mutableStateOf(basketViewModel.detectProductCount(productsListItem)) }
+                                Column(
+                                    verticalArrangement = Arrangement.SpaceBetween,
+                                    modifier = Modifier.height(96.dp)
+                                ) {
+                                    Text(
+                                        text = productsListItem.name,
+                                        style = Typography.headlineMedium
+                                    )
+                                    var currentCount by remember {
+                                        mutableStateOf(
+                                            basketViewModel.detectProductCount(
+                                                productsListItem
+                                            )
+                                        )
+                                    }
                                     ItemCardCounter(
                                         currentCount = currentCount,
-                                        minusCount = { basketViewModel.plusMinusCount(productsListItem, false)
-                                            basketListContainsProduct = basketViewModel.detectProductOwn(productsListItem)
-                                            if (currentCount >= 2) currentCount = basketViewModel.detectProductCount(productsListItem) },
-                                        plusCount = { basketViewModel.plusMinusCount(productsListItem, true)
-                                            currentCount = basketViewModel.detectProductCount(productsListItem) },
+                                        minusCount = {
+                                            basketViewModel.plusMinusCount(productsListItem, false)
+                                            basketListContainsProduct =
+                                                basketViewModel.detectProductOwn(productsListItem)
+                                            if (currentCount >= 2) currentCount =
+                                                basketViewModel.detectProductCount(productsListItem)
+                                        },
+                                        plusCount = {
+                                            basketViewModel.plusMinusCount(productsListItem, true)
+                                            currentCount =
+                                                basketViewModel.detectProductCount(productsListItem)
+                                        },
                                     )
                                 }
                             }
+
                             false -> {}
                         }
 
                     }
                     Column(Modifier.width(100.dp), horizontalAlignment = Alignment.End) {
-                        Text(text = "${productsListItem.price_current/100} ₽", style = Typography.bodySmall)
+                        Text(
+                            text = "${productsListItem.price_current / 100} ₽",
+                            style = Typography.bodySmall
+                        )
                         if (productsListItem.price_old != 0) {
                             Text(
-                                text = "${productsListItem.price_old/100} ₽",
+                                text = "${productsListItem.price_old / 100} ₽",
                                 style = Typography.bodySmall,
                                 color = MaterialTheme.colors.textGrayDiscount,
                                 textDecoration = TextDecoration.LineThrough
@@ -90,6 +124,7 @@ fun ProductBasketItem(productsListItem: ProductsListItem, basketViewModel: Baske
                 Divider(thickness = 1.dp, color = MaterialTheme.colors.textGrayDiscount)
             }
         }
+
         false -> {}
     }
 }

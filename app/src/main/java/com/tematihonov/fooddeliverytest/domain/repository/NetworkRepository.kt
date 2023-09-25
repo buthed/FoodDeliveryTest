@@ -12,5 +12,4 @@ interface NetworkRepository {
     suspend fun getProducts(): Response<ArrayList<ProductsListItem>>
 
     suspend fun getTags(): Response<ArrayList<TagsListItem>>
-
 }

@@ -20,11 +20,13 @@ import com.tematihonov.fooddeliverytest.presentation.ui.theme.Typography
 
 @Composable
 fun SelectedCategory(selectCategory: () -> Unit, category: String) {
-    Box(
-        modifier = Modifier
+    Box(modifier = Modifier
             .clip(RoundedCornerShape(8.dp))
             .background(MaterialTheme.colors.mainOrange)
-            .padding(vertical = MaterialTheme.spacing.small2, horizontal = MaterialTheme.spacing.medium2)
+            .padding(
+                vertical = MaterialTheme.spacing.small2,
+                horizontal = MaterialTheme.spacing.medium2
+            )
             .clickable(onClick = selectCategory),
         contentAlignment = Alignment.Center
     ) {
@@ -34,10 +36,12 @@ fun SelectedCategory(selectCategory: () -> Unit, category: String) {
 
 @Composable
 fun Category(selectCategory: () -> Unit, category: String) {
-    Box(
-        modifier = Modifier
+    Box(modifier = Modifier
             .clip(RoundedCornerShape(8.dp))
-            .padding(vertical = MaterialTheme.spacing.small2, horizontal = MaterialTheme.spacing.medium2)
+            .padding(
+                vertical = MaterialTheme.spacing.small2,
+                horizontal = MaterialTheme.spacing.medium2
+            )
             .clickable(onClick = selectCategory),
         contentAlignment = Alignment.Center
     ) {

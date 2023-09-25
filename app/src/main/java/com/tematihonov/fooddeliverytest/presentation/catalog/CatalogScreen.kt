@@ -15,9 +15,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -28,7 +26,6 @@ import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material.rememberBottomSheetState
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,7 +34,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -51,13 +47,13 @@ import com.tematihonov.fooddeliverytest.presentation.components.BottomShadow
 import com.tematihonov.fooddeliverytest.presentation.components.BottomSheet
 import com.tematihonov.fooddeliverytest.presentation.components.ButtonPurchaseWithIcon
 import com.tematihonov.fooddeliverytest.presentation.components.Category
+import com.tematihonov.fooddeliverytest.presentation.components.CircularProgressIndic
 import com.tematihonov.fooddeliverytest.presentation.components.CustomAppBar
 import com.tematihonov.fooddeliverytest.presentation.components.InformationScreen
 import com.tematihonov.fooddeliverytest.presentation.components.ProductCatalogItem
 import com.tematihonov.fooddeliverytest.presentation.components.ProductItem
 import com.tematihonov.fooddeliverytest.presentation.components.SelectedCategory
 import com.tematihonov.fooddeliverytest.presentation.components.SplashScreen
-import com.tematihonov.fooddeliverytest.presentation.ui.colors
 import com.tematihonov.fooddeliverytest.presentation.ui.spacing
 import com.tematihonov.fooddeliverytest.utils.BackHandler
 import com.tematihonov.fooddeliverytest.utils.SearchAppBarState
@@ -73,7 +69,7 @@ fun CatalogScreen() {
 
     val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState)
-    
+
     val coroutine = rememberCoroutineScope()
     val context = LocalContext.current
 
@@ -83,6 +79,7 @@ fun CatalogScreen() {
 
     // Delete BackPress from first screen
     BackHandler(onBack = { })
+
 
     when (connectionType) {
         true -> {
@@ -97,10 +94,12 @@ fun CatalogScreen() {
                     }
                 },
                 sheetPeekHeight = 0.dp,
-                topBar = { CustomAppBar(
-                    onFilterClicked = { coroutine.launch { sheetState.expand()} },
-                    catalogViewModel = viewModel,
-                    searchAppBarState = viewModel.searchAppBarState)
+                topBar = {
+                    CustomAppBar(
+                        onFilterClicked = { coroutine.launch { sheetState.expand() } },
+                        catalogViewModel = viewModel,
+                        searchAppBarState = viewModel.searchAppBarState
+                    )
                 },
             ) {
                 when (viewModel.searchAppBarState) {
@@ -121,11 +120,7 @@ fun CatalogScreen() {
                             ) {
                                 items(viewModel.catalogCategories) {
                                     if (it.id == viewModel.currentCategory) SelectedCategory(
-                                        selectCategory = {
-                                            viewModel.selectNewCategory(
-                                                it.id
-                                            )
-                                        },
+                                        selectCategory = { viewModel.selectNewCategory(it.id) },
                                         category = it.name
                                     )
                                     else Category(
@@ -135,48 +130,25 @@ fun CatalogScreen() {
                                 }
                             }
                             if (viewModel.isLoadingProducts) {
-                                Box(
-                                    Modifier
-                                        .fillMaxWidth()
-                                        .height(500.dp),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    CircularProgressIndicator(
-                                        modifier = Modifier.size(100.dp),
-                                        color = MaterialTheme.colors.mainOrange
-                                    )
-                                }
+                                CircularProgressIndic()
                             } else {
                                 when (viewModel.productsList.isEmpty()) {
                                     true -> InformationScreen(stringResource(id = R.string.there_are_no_such_dishes))
                                     false -> {
-                                        LazyVerticalGrid(
-                                            columns = GridCells.Fixed(2), modifier = Modifier
+                                        CatalogLazyGrid(
+                                            viewModel,
+                                            Modifier
                                                 .fillMaxSize()
                                                 .padding(MaterialTheme.spacing.medium2)
                                                 .weight(1f, fill = false),
-                                            horizontalArrangement = Arrangement.spacedBy(
-                                                MaterialTheme.spacing.extraSmall
-                                            ),
-                                            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
-                                        ) {
-                                            items(viewModel.productsList) {
-                                                ProductCatalogItem(productsListItem = it) {
-                                                    viewModel.selectNewProduct(
-                                                        it
-                                                    )
-                                                }
-                                            }
-                                        }
+                                        )
                                     }
                                 }
                             }
                             if (basketViewModel.totalPrice != 0) {
                                 Box(Modifier.padding(bottom = MaterialTheme.spacing.small2)) {
                                     ButtonPurchaseWithIcon(
-                                        buttonPurchase = {
-                                            viewModel.basketScreenVisibility = true
-                                        },
+                                        buttonPurchase = { viewModel.basketScreenVisibility = true },
                                         totalPrice = "${basketViewModel.totalPrice / 100} ₽"
                                     )
                                 }
@@ -189,17 +161,7 @@ fun CatalogScreen() {
                             BottomShadow()
                             when (viewModel.isLoadingProducts) {
                                 true -> {
-                                    Box(
-                                        Modifier
-                                            .fillMaxWidth()
-                                            .height(500.dp),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        CircularProgressIndicator(
-                                            modifier = Modifier.size(100.dp),
-                                            color = MaterialTheme.colors.mainOrange
-                                        )
-                                    }
+                                    CircularProgressIndic()
                                 }
 
                                 false -> {
@@ -212,25 +174,11 @@ fun CatalogScreen() {
                                         }
 
                                         false -> {
-                                            LazyVerticalGrid(
-                                                columns = GridCells.Fixed(2), modifier = Modifier
+                                            CatalogLazyGrid(
+                                                viewModel, Modifier
                                                     .fillMaxSize()
-                                                    .padding(MaterialTheme.spacing.medium2),
-                                                horizontalArrangement = Arrangement.spacedBy(
-                                                    MaterialTheme.spacing.extraSmall
-                                                ),
-                                                verticalArrangement = Arrangement.spacedBy(
-                                                    MaterialTheme.spacing.extraSmall
-                                                )
-                                            ) {
-                                                items(viewModel.productsList) {
-                                                    ProductCatalogItem(productsListItem = it) {
-                                                        viewModel.selectNewProduct(
-                                                            it
-                                                        )
-                                                    }
-                                                }
-                                            }
+                                                    .padding(MaterialTheme.spacing.medium2)
+                                            )
                                         }
                                     }
                                 }
@@ -240,14 +188,16 @@ fun CatalogScreen() {
                 }
             }
 
-            AnimatedVisibility(visible = viewModel.isLoadingCategories,
+            AnimatedVisibility(
+                visible = viewModel.isLoadingCategories,
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
                 SplashScreen()
             }
 
-            AnimatedVisibility(visible = viewModel.currentProductSelected,
+            AnimatedVisibility(
+                visible = viewModel.currentProductSelected,
                 enter = slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }),
                 exit = slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth })
             ) {
@@ -275,9 +225,28 @@ fun CatalogScreen() {
 
     LaunchedEffect(true) {
         coroutine.launch {
-            while (true) {
+            while (!connectionType) {
                 connectionType = getNetwork(context)
                 delay(5000)
+            }
+        }
+    }
+}
+
+@Composable
+private fun CatalogLazyGrid(viewModel: CatalogViewModel, modifier: Modifier) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2), modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(
+            MaterialTheme.spacing.extraSmall
+        ),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
+    ) {
+        items(viewModel.productsList) {
+            ProductCatalogItem(productsListItem = it) {
+                viewModel.selectNewProduct(
+                    it
+                )
             }
         }
     }
@@ -288,10 +257,13 @@ fun getNetwork(context: Context): Boolean {
         context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
     val nw = connectivityManager.activeNetwork ?: return false
     val actNw = connectivityManager.getNetworkCapabilities(nw) ?: return false
-    when {
-        actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> return true
-        actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> return true
-        actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> { return false }
-        else -> return false
+    return when {
+        actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+        actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+        actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> {
+            false
+        }
+
+        else -> false
     }
 }
