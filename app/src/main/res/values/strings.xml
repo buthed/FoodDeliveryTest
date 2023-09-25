@@ -16,4 +16,5 @@
     <string name="nothing_was_found">Ничего не нашлось :(</string>
     <string name="there_are_no_such_dishes">Таких блюд нет :(\nПопробуйте изменить фильтры</string>
     <string name="empty_select_dishes">Пусто, выберите блюда\nв каталоге :)</string>
+    <string name="no_internet">Отсутствует интернет соединение\nпопробуйте проверить соединение</string>
 </resources>

@@ -1,5 +1,9 @@
 package com.tematihonov.fooddeliverytest.presentation.catalog
 
+import android.content.Context
+import android.content.Context.CONNECTIVITY_SERVICE
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -27,10 +31,16 @@ import androidx.compose.material.rememberBottomSheetState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -51,6 +61,7 @@ import com.tematihonov.fooddeliverytest.presentation.ui.colors
 import com.tematihonov.fooddeliverytest.presentation.ui.spacing
 import com.tematihonov.fooddeliverytest.utils.BackHandler
 import com.tematihonov.fooddeliverytest.utils.SearchAppBarState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -59,135 +70,167 @@ fun CatalogScreen() {
     val viewModel = hiltViewModel<CatalogViewModel>()
     val basketViewModel = hiltViewModel<BasketViewModel>()
 
+
     val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState)
     
     val coroutine = rememberCoroutineScope()
+    val context = LocalContext.current
+
+
+    // Fetching the Network Information
+    var connectionType by remember { mutableStateOf(false) }
 
     // Delete BackPress from first screen
     BackHandler(onBack = { })
-    
-    BottomSheetScaffold(
-        scaffoldState = scaffoldState,
-        sheetContent = {
-            BottomSheet(tagsList = viewModel.tagsList) {
-                coroutine.launch {
-                    sheetState.collapse()
-                    viewModel.checkProducts(viewModel.currentCategory)
-                }
-            }
-        },
-        sheetPeekHeight = 0.dp,
-        topBar = { CustomAppBar(
-            onFilterClicked = { coroutine.launch { sheetState.expand()} },
-            catalogViewModel = viewModel,
-            searchAppBarState = viewModel.searchAppBarState)
-        },
-    ) {
-        when(viewModel.searchAppBarState) {
-            SearchAppBarState.CLOSED -> {
-                Column(
-                    Modifier
-                        .background(Color.White)
-                        .fillMaxSize()
-                ) {
-                    BottomShadow()
-                    LazyRow(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(
-                                horizontal = MaterialTheme.spacing.medium2,
-                                vertical = MaterialTheme.spacing.extraSmall
-                            )
-                    ) {
-                        items(viewModel.catalogCategories) {
-                            if (it.id == viewModel.currentCategory) SelectedCategory(selectCategory = {
-                                viewModel.selectNewCategory(
-                                    it.id
-                                )
-                            }, category = it.name)
-                            else Category(
-                                selectCategory = { viewModel.selectNewCategory(it.id) },
-                                category = it.name
-                            )
+
+    when (connectionType) {
+        true -> {
+            BottomSheetScaffold(
+                scaffoldState = scaffoldState,
+                sheetContent = {
+                    BottomSheet(tagsList = viewModel.tagsList) {
+                        coroutine.launch {
+                            sheetState.collapse()
+                            viewModel.checkProducts(viewModel.currentCategory)
                         }
                     }
-                    if (viewModel.isLoadingProducts) {
-                        Box(
+                },
+                sheetPeekHeight = 0.dp,
+                topBar = { CustomAppBar(
+                    onFilterClicked = { coroutine.launch { sheetState.expand()} },
+                    catalogViewModel = viewModel,
+                    searchAppBarState = viewModel.searchAppBarState)
+                },
+            ) {
+                when (viewModel.searchAppBarState) {
+                    SearchAppBarState.CLOSED -> {
+                        Column(
                             Modifier
-                                .fillMaxWidth()
-                                .height(500.dp),
-                            contentAlignment = Alignment.Center
+                                .background(Color.White)
+                                .fillMaxSize()
                         ) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(100.dp),
-                                color = MaterialTheme.colors.mainOrange
-                            )
-                        }
-                    } else {
-                        when (viewModel.productsList.isEmpty()) {
-                            true -> InformationScreen(stringResource(id = R.string.there_are_no_such_dishes))
-                            false -> {
-                                LazyVerticalGrid(
-                                    columns = GridCells.Fixed(2), modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(MaterialTheme.spacing.medium2)
-                                        .weight(1f, fill = false),
-                                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall),
-                                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
-                                ) {
-                                    items(viewModel.productsList) {
-                                        ProductCatalogItem(productsListItem = it) { viewModel.selectNewProduct(it) }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (basketViewModel.totalPrice != 0) {
-                        Box(Modifier.padding(bottom = MaterialTheme.spacing.small2)) {
-                            ButtonPurchaseWithIcon(
-                                buttonPurchase = { viewModel.basketScreenVisibility = true },
-                                totalPrice = "${basketViewModel.totalPrice / 100} ₽"
-                            )
-                        }
-                    }
-                }
-            }
-            SearchAppBarState.OPENED -> {
-                Column {
-                    BottomShadow()
-                    when (viewModel.isLoadingProducts) {
-                        true -> {
-                            Box(
-                                Modifier
+                            BottomShadow()
+                            LazyRow(
+                                modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(500.dp),
-                                contentAlignment = Alignment.Center
+                                    .padding(
+                                        horizontal = MaterialTheme.spacing.medium2,
+                                        vertical = MaterialTheme.spacing.extraSmall
+                                    )
                             ) {
-                                CircularProgressIndicator(
-                                    modifier = Modifier.size(100.dp),
-                                    color = MaterialTheme.colors.mainOrange
-                                )
+                                items(viewModel.catalogCategories) {
+                                    if (it.id == viewModel.currentCategory) SelectedCategory(
+                                        selectCategory = {
+                                            viewModel.selectNewCategory(
+                                                it.id
+                                            )
+                                        },
+                                        category = it.name
+                                    )
+                                    else Category(
+                                        selectCategory = { viewModel.selectNewCategory(it.id) },
+                                        category = it.name
+                                    )
+                                }
                             }
-                        }
-                        false -> {
-                            when (viewModel.productsList.isEmpty()) {
-                                true -> {
-                                    when (viewModel.searchStartWriting) {
-                                        true -> InformationScreen(stringResource(id = R.string.nothing_was_found))
-                                        false -> InformationScreen(stringResource(id = R.string.enter_name_of_dish))
+                            if (viewModel.isLoadingProducts) {
+                                Box(
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .height(500.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.size(100.dp),
+                                        color = MaterialTheme.colors.mainOrange
+                                    )
+                                }
+                            } else {
+                                when (viewModel.productsList.isEmpty()) {
+                                    true -> InformationScreen(stringResource(id = R.string.there_are_no_such_dishes))
+                                    false -> {
+                                        LazyVerticalGrid(
+                                            columns = GridCells.Fixed(2), modifier = Modifier
+                                                .fillMaxSize()
+                                                .padding(MaterialTheme.spacing.medium2)
+                                                .weight(1f, fill = false),
+                                            horizontalArrangement = Arrangement.spacedBy(
+                                                MaterialTheme.spacing.extraSmall
+                                            ),
+                                            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
+                                        ) {
+                                            items(viewModel.productsList) {
+                                                ProductCatalogItem(productsListItem = it) {
+                                                    viewModel.selectNewProduct(
+                                                        it
+                                                    )
+                                                }
+                                            }
+                                        }
                                     }
                                 }
-                                false -> {
-                                    LazyVerticalGrid(
-                                        columns = GridCells.Fixed(2), modifier = Modifier
-                                            .fillMaxSize()
-                                            .padding(MaterialTheme.spacing.medium2),
-                                        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall),
-                                        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
+                            }
+                            if (basketViewModel.totalPrice != 0) {
+                                Box(Modifier.padding(bottom = MaterialTheme.spacing.small2)) {
+                                    ButtonPurchaseWithIcon(
+                                        buttonPurchase = {
+                                            viewModel.basketScreenVisibility = true
+                                        },
+                                        totalPrice = "${basketViewModel.totalPrice / 100} ₽"
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    SearchAppBarState.OPENED -> {
+                        Column {
+                            BottomShadow()
+                            when (viewModel.isLoadingProducts) {
+                                true -> {
+                                    Box(
+                                        Modifier
+                                            .fillMaxWidth()
+                                            .height(500.dp),
+                                        contentAlignment = Alignment.Center
                                     ) {
-                                        items(viewModel.productsList) {
-                                            ProductCatalogItem(productsListItem = it) { viewModel.selectNewProduct(it) }
+                                        CircularProgressIndicator(
+                                            modifier = Modifier.size(100.dp),
+                                            color = MaterialTheme.colors.mainOrange
+                                        )
+                                    }
+                                }
+
+                                false -> {
+                                    when (viewModel.productsList.isEmpty()) {
+                                        true -> {
+                                            when (viewModel.searchStartWriting) {
+                                                true -> InformationScreen(stringResource(id = R.string.nothing_was_found))
+                                                false -> InformationScreen(stringResource(id = R.string.enter_name_of_dish))
+                                            }
+                                        }
+
+                                        false -> {
+                                            LazyVerticalGrid(
+                                                columns = GridCells.Fixed(2), modifier = Modifier
+                                                    .fillMaxSize()
+                                                    .padding(MaterialTheme.spacing.medium2),
+                                                horizontalArrangement = Arrangement.spacedBy(
+                                                    MaterialTheme.spacing.extraSmall
+                                                ),
+                                                verticalArrangement = Arrangement.spacedBy(
+                                                    MaterialTheme.spacing.extraSmall
+                                                )
+                                            ) {
+                                                items(viewModel.productsList) {
+                                                    ProductCatalogItem(productsListItem = it) {
+                                                        viewModel.selectNewProduct(
+                                                            it
+                                                        )
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -196,29 +239,59 @@ fun CatalogScreen() {
                     }
                 }
             }
+
+            AnimatedVisibility(visible = viewModel.isLoadingCategories,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                SplashScreen()
+            }
+
+            AnimatedVisibility(visible = viewModel.currentProductSelected,
+                enter = slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }),
+                exit = slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth })
+            ) {
+                ProductItem(currentProduct = viewModel.currentProduct,
+                    backClick = { viewModel.selectNewProduct(null) },
+                    purchaseClick = {
+                        basketViewModel.addNewProduct(viewModel.currentProduct!!)
+                        viewModel.selectNewProduct(null)
+                    })
+            }
+
+            AnimatedVisibility(viewModel.basketScreenVisibility) {
+                BasketScreen(viewModel)
+            }
+
+            LaunchedEffect(true) {
+                viewModel.initViewModel()
+            }
+        }
+
+        false -> {
+            InformationScreen(infoText = stringResource(id = R.string.no_internet))
         }
     }
-    
-    AnimatedVisibility(visible = viewModel.isLoadingCategories,
-        enter = fadeIn(),
-        exit = fadeOut()
-    ) {
-        SplashScreen()
-    }
 
-    AnimatedVisibility(visible = viewModel.currentProductSelected,
-        enter = slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }),
-        exit = slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth })
-    ) {
-        ProductItem(currentProduct = viewModel.currentProduct,
-            backClick = { viewModel.selectNewProduct(null) },
-            purchaseClick = {
-                basketViewModel.addNewProduct(viewModel.currentProduct!!)
-                viewModel.selectNewProduct(null)
-            })
+    LaunchedEffect(true) {
+        coroutine.launch {
+            while (true) {
+                connectionType = getNetwork(context)
+                delay(5000)
+            }
+        }
     }
-    
-    AnimatedVisibility(viewModel.basketScreenVisibility) {
-        BasketScreen(viewModel)
+}
+
+fun getNetwork(context: Context): Boolean {
+    val connectivityManager =
+        context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+    val nw = connectivityManager.activeNetwork ?: return false
+    val actNw = connectivityManager.getNetworkCapabilities(nw) ?: return false
+    when {
+        actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> return true
+        actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> return true
+        actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> { return false }
+        else -> return false
     }
 }

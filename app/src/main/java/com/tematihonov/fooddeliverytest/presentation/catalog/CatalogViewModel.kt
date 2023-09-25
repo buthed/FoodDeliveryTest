@@ -38,17 +38,6 @@ class CatalogViewModel @Inject constructor(
     var isLoadingProducts by mutableStateOf(true)
     var isLoadingTags by mutableStateOf(true)
 
-    init {
-        viewModelScope.launch {
-            do {
-                if (isLoadingCategories)  { checkCategories() }
-                if (isLoadingProducts) { checkProducts(0) }
-                if (isLoadingTags)  { checkTags() }
-                delay(5000)
-            } while (isLoadingProducts || isLoadingTags || isLoadingCategories)
-        }
-    }
-
     fun checkCategories() {
         viewModelScope.launch {
             isLoadingCategories = true
@@ -138,5 +127,16 @@ class CatalogViewModel @Inject constructor(
     fun selectNewProduct(productsListItem: ProductsListItem?) {
         currentProductSelected =  (productsListItem != null)
         currentProduct = productsListItem
+    }
+
+    fun initViewModel() {
+        viewModelScope.launch {
+            do {
+                if (isLoadingCategories)  { checkCategories() }
+                if (isLoadingProducts) { checkProducts(0) }
+                if (isLoadingTags)  { checkTags() }
+                delay(5000)
+            } while (isLoadingProducts || isLoadingTags || isLoadingCategories)
+        }
     }
 }
