@@ -13,7 +13,5 @@ FoodDeliveryTest
  <br>
  </h3>
  <h5 align="left">
- По анимациям использовались AnimatedVisibility и Lottie, остальные внедрять не посчитал нужными<br>
- Из фич: блокировка backPress, кастомная тема и topAppBar, отслеживание статуса сети.<br><br>
  Видео работающего приложения: https://disk.yandex.ru/i/58MpBaUzenw_EQ
  </h5>
